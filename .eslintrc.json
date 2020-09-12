@@ -1,25 +1,25 @@
 {
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "ecmaFeatures": {
-            "impliedStrict": true
-        },
-        "sourceType": "module"
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "impliedStrict": true
     },
-    "env": {
-        "es6": true,
-        "node": true,
-        "commonjs": true,
-        "mocha": true
-    },
-    "rules": {
-        "no-console": [
-            "error",
-            {
-                "allow": ["error"]
-            }
-        ]
-    },
-    "extends": ["eslint:recommended", "prettier"]
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "commonjs": true,
+    "mocha": true
+  },
+  "rules": {
+    "no-console": [
+      "error",
+      {
+        "allow": ["error"]
+      }
+    ]
+  },
+  "extends": ["eslint:recommended", "prettier"]
 }
