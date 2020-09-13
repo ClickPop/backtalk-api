@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon app.js",
     "lint": "eslint --cache --fix",
-    "prettier": "prettier -w '*.{js,json,md}' '**/*.{js,json,md}' '!node_modules/**.*'"
+    "prettier": "prettier --write '*.{js,json,md,scss}' '**/*.{js,json,md,scss}' '!node_modules/**.*'"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,6 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md,json}": "prettier --write"
+    "*.{js,md,json}": "prettier --write"
   }
 }
