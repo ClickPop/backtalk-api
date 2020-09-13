@@ -4,9 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "setup": "npm install && sequelize-cli db:create",
+    "migrate": "sequelize-cli db:migrate",
+    "migrate:fresh": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
     "start": "nodemon app.js",
     "lint": "eslint --cache --fix",
-    "prettier": "prettier --write '*.{js,json,md,scss}' '**/*.{js,json,md,scss}' '!node_modules/**.*'"
+    "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +28,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "morgan": "^1.10.0",
+    "pg": "^8.3.3",
     "sequelize": "^6.3.5"
   },
   "husky": {
