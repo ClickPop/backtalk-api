@@ -8,6 +8,8 @@
     "setup:recreate": "npm install && node ./scripts/create-db.js --recreate && sequelize-cli db:migrate",
     "migrate": "sequelize-cli db:migrate",
     "migrate:fresh": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
+    "seed": "sequelize-cli db:seed:all",
+    "seed:fresh": "sequelize-cli db:seed:undo:all && npm run seed",
     "start": "nodemon app.js",
     "lint": "eslint --cache --fix",
     "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*"
@@ -22,12 +24,14 @@
     "eslint-config-prettier": "^6.11.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.3.0",
+    "lorem-ipsum": "^2.0.3",
     "nodemon": "^2.0.4",
     "pgtools": "^0.3.0",
     "prettier": "^2.1.1",
     "sequelize-cli": "^6.2.0"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "pg": "^8.3.3",

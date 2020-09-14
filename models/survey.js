@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      this.user = this.belongsTo(models.User);
       this.questions = this.hasMany(models.Question);
     }
   }
@@ -15,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
+      userId: DataTypes.BIGINT,
     },
     {
       sequelize,
