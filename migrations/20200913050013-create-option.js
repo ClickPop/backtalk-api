@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      title: {
+      text: {
         type: Sequelize.TEXT,
       },
       description: {
@@ -20,7 +20,7 @@ module.exports = {
       trigger: {
         type: Sequelize.STRING,
       },
-      question_id: {
+      questionId: {
         type: Sequelize.BIGINT,
         default: null,
         references: {

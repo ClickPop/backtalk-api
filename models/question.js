@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Question.init(
     {
-      title: DataTypes.TEXT,
+      prompt: DataTypes.TEXT,
       description: DataTypes.TEXT,
       type: {
         type: DataTypes.ENUM('bool', 'select', 'text'),

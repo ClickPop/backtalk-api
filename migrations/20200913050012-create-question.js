@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      title: {
+      prompt: {
         type: Sequelize.TEXT,
       },
       description: {
@@ -19,7 +19,7 @@ module.exports = {
         allowNull: false,
         defaultValue: 'text',
       },
-      survey_id: {
+      surveyId: {
         type: Sequelize.BIGINT,
         defaultValue: null,
         references: {
