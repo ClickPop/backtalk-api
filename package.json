@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "setup": "npm install && sequelize-cli db:create",
+    "setup": "npm install && node ./scripts/create-db.js && sequelize-cli db:migrate",
+    "setup:recreate": "npm install && node ./scripts/create-db.js --recreate && sequelize-cli db:migrate",
     "migrate": "sequelize-cli db:migrate",
     "migrate:fresh": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
@@ -25,6 +26,7 @@
     "lint-staged": "^10.3.0",
     "lorem-ipsum": "^2.0.3",
     "nodemon": "^2.0.4",
+    "pgtools": "^0.3.0",
     "prettier": "^2.1.1",
     "sequelize-cli": "^6.2.0"
   },
