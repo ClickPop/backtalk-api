@@ -9,7 +9,7 @@ module.exports = {
     for (let j = 0; j < 4; j++) {
       for (let i = 0; i < questions[0].length; i++) {
         options.push({
-          text: `Option ${j}`,
+          text: `Option ${j + 1}`,
           questionId: questions[0][i].id,
           createdAt: new Date().toUTCString(),
           updatedAt: new Date().toUTCString(),
