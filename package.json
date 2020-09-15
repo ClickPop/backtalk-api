@@ -2,7 +2,7 @@
   "name": "survey-app-server",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "setup": "npm install && node ./scripts/create-db.js && npm run migrate && npm run seed",
     "setup:recreate": "npm install && node ./scripts/create-db.js --recreate && npm run migrate:fresh && npm run seed:fresh",
@@ -11,6 +11,8 @@
     "seed": "sequelize-cli db:seed:all",
     "seed:fresh": "sequelize-cli db:seed:undo:all && npm run seed",
     "start": "nodemon app.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "eslint --cache --fix",
     "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*"
   },
@@ -22,13 +24,16 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^24.0.0",
     "husky": "^4.3.0",
+    "jest": "^26.4.2",
     "lint-staged": "^10.3.0",
     "lorem-ipsum": "^2.0.3",
     "nodemon": "^2.0.4",
     "pgtools": "^0.3.0",
     "prettier": "^2.1.1",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
