@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.question = this.hasOne(models.Question);
+      this.question = this.belongsTo(models.Question);
     }
   }
   Response.init(
     {
       value: DataTypes.STRING,
-      respondant: DataTypes.STRING,
+      respondent: DataTypes.STRING,
       questionId: DataTypes.BIGINT,
     },
     {

@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
+const commonInfo = require('./commonData');
 
 describe('Registration', () => {
   it('should respond with a 422 and an error message', async (done) => {
@@ -123,6 +124,7 @@ describe('Refresh Token', () => {
     const res = await req.post('/api/v1/auth/refresh_token');
     expect(res.body.accessToken).toBeDefined();
     expect(res.header('set-cookie')).stringContaining('jrt');
+    commonInfo.accessToken = res.body.accessToken;
     done();
   });
 });

@@ -11,7 +11,7 @@ module.exports = {
       value: {
         type: Sequelize.STRING,
       },
-      respondant: {
+      respondent: {
         type: Sequelize.STRING,
       },
       questionId: {
