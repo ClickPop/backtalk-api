@@ -2,6 +2,8 @@ const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
 const commonInfo = require('./commonData');
+const HashIds = require('hashids/cjs');
+const { encode } = new HashIds(process.env.HASH_SECRET);
 
 describe('Create Survey', () => {
   it('should respond with a 200 and create a survey with the given information', async (done) => {
@@ -77,18 +79,79 @@ describe('Get Surveys', () => {
     done();
   });
 
-  it('should respond with a subset of surveys with a query parameter', async (done) => {
+  it('should respond with a subset of surveys with the count query parameter', async (done) => {
     const res = await req
-      .get('/api/v1/surveys?count=10')
+      .get('/api/v1/surveys?count=1')
       .set('Authorization', `Bearer ${commonInfo.accessToken}`);
     expect(res.body.results).toBeDefined();
     expect(Array.isArray(res.body.results)).toBeTruthy();
-    expect(res.body.results).toHaveLength(10);
+    expect(res.body.results).toHaveLength(1);
+    commonInfo.firstSurvey = res.body.results[0];
+    done();
+  });
+
+  it('should respond with a subset of surveys with the count and skip some using the offset query parameters', async (done) => {
+    const res = await req
+      .get('/api/v1/surveys?count=1&offset=1')
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    expect(res.body.results).toBeDefined();
+    expect(Array.isArray(res.body.results)).toBeTruthy();
+    expect(res.body.results).toHaveLength(1);
+    expect(res.body.results[0]).not.toEqual(commonInfo.firstSurvey);
     done();
   });
 
   it('should respond with a 401 if the user is not logged in.', async (done) => {
     const res = await req.get('/api/v1/surveys');
+    expect(res.status).toBe(401);
+    expect(res.body.errors).toEqual(
+      expect.arrayContaining([
+        {
+          msg: 'Unauthorized',
+        },
+      ]),
+    );
+    done();
+  });
+});
+
+describe('Get Specific Survey', () => {
+  it('should respond with a 200 and a specific survey', async (done) => {
+    const res = await req
+      .get(`/api/v1/surveys/${encode(commonInfo.firstSurvey.id)}`)
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.result.title).toBe('Test Title');
+    expect(res.body.result.description).toBe('This is a test description');
+    expect(res.body.result.questions).toHaveLength(2);
+    res.body.result.questions.forEach((question) => {
+      expect(question).toHaveProperty('prompt');
+      expect(question).toHaveProperty('description');
+      expect(question).toHaveProperty('type');
+    });
+    done();
+  });
+
+  it("should respond with a 404 and an error if the survey doesn't exist", async (done) => {
+    const res = await req
+      .get(`/api/v1/surveys/doesNotExist`)
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    expect(res.status).toBe(404);
+    expect(res.body.errors).toEqual(
+      expect.arrayContaining([
+        {
+          msg: 'Not Found',
+          location: 'url',
+        },
+      ]),
+    );
+    done();
+  });
+
+  it('should respond with a 401 if the user is not logged in.', async (done) => {
+    const res = await req.get(
+      `/api/v1/surveys/${encode(commonInfo.firstSurvey.id)}`,
+    );
     expect(res.status).toBe(401);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
