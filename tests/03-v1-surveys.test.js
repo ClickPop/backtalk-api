@@ -5,7 +5,7 @@ const commonInfo = require('./commonData');
 const HashIds = require('hashids/cjs');
 const { encode } = new HashIds(process.env.HASH_SECRET);
 
-describe('Create Survey', () => {
+describe('New Survey', () => {
   it('should respond with a 200 and create a survey with the given information', async (done) => {
     const res = await req
       .post('/api/v1/surveys/new')
