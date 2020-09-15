@@ -17,7 +17,7 @@ module.exports = {
       }
     }
 
-    return await queryInterface.bulkInsert('Options', options);
+    // return await queryInterface.bulkInsert('Options', options);
   },
 
   down: async (queryInterface) => {
