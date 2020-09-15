@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const app = require('../app');
-const req = supertest(app);
+const req = supertest.agent(app);
 describe('Initial Endpoint', () => {
   it('should respond at api root', async (done) => {
     const res = await req.get('/');
