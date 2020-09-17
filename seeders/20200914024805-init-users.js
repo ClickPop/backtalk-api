@@ -1,5 +1,5 @@
 'use strict';
-const { hash } = require('bcrypt');
+const { hash } = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface) => {
