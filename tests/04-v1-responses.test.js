@@ -26,7 +26,7 @@ describe('New Response', () => {
 describe('Get Responses', () => {
   it('should respond with a 200 and all the responses for a given survey', async (done) => {
     const res = await req
-      .get(`/api/v1/response/${encode(commonInfo.firstSurvey.id)}`)
+      .get(`/api/v1/responses/${encode(commonInfo.firstSurvey.id)}`)
       .set('Authorization', `Bearer ${commonInfo.accessToken}`);
     expect(res.body).toHaveProperty('results');
     expect(Array.isArray(res.body.results)).toBeTruthy();
@@ -36,7 +36,7 @@ describe('Get Responses', () => {
 
   it('should respond with a 404 if the survey does not exist', async (done) => {
     const res = await req
-      .get(`/api/v1/response/doesNotExist`)
+      .get(`/api/v1/responses/doesNotExist`)
       .set('Authorization', `Bearer ${commonInfo.accessToken}`);
     expect(res.status).toBe(404);
     expect(res.body.errors).toEqual(
@@ -68,8 +68,9 @@ describe('Delete response', () => {
   it('should respond with a 200 if the response is deleted.', async (done) => {
     const res = await req
       .delete('/api/v1/responses/delete')
-      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
-    expect(res.status).toBe(204);
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+      .send({ responseId: 0 });
+    expect(res.status).toBe(200);
     expect(res.body).toEqual({
       deleted: true,
     });
@@ -77,7 +78,9 @@ describe('Delete response', () => {
   });
 
   it('should respond with a 401 if the user is not logged in.', async (done) => {
-    const res = await req.deleted('/api/v1/responses/delete');
+    const res = await req
+      .deleted('/api/v1/responses/delete')
+      .send({ surveyId: 0 });
     expect(res.status).toBe(401);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([

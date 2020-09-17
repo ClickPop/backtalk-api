@@ -134,7 +134,7 @@ describe('Delete user', () => {
     const res = await req
       .delete('/api/v1/users/delete')
       .set('Authorization', `Bearer ${commonInfo.accessToken}`);
-    expect(res.status).toBe(204);
+    expect(res.status).toBe(200);
     expect(res.body).toEqual({
       deleted: true,
     });
