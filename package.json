@@ -13,7 +13,7 @@
     "seed": "sequelize-cli db:seed:all",
     "seed:fresh": "sequelize-cli db:seed:undo:all && npm run seed",
     "start": "nodemon server.js",
-    "test": "NODE_ENV=test npm run db:create && npm run migrate:fresh && npm run seed:fresh && npm run test:force && npm run db:drop",
+    "test": "NODE_ENV=test npm run db:create && NODE_ENV=test npm run migrate:fresh && NODE_ENV=test npm run seed:fresh && NODE_ENV=test npm run test && NODE_ENV=test npm run db:drop",
     "test:verbose": "jest --verbose",
     "test:force": "jest --forceExit",
     "test:watch": "jest --watch",
