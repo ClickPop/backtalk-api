@@ -63,3 +63,29 @@ describe('Get Responses', () => {
     done();
   });
 });
+
+describe('Delete response', () => {
+  it('should respond with a 200 if the response is deleted.', async (done) => {
+    const res = await req
+      .delete('/api/v1/responses/delete')
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    expect(res.status).toBe(204);
+    expect(res.body).toEqual({
+      deleted: true,
+    });
+    done();
+  });
+
+  it('should respond with a 401 if the user is not logged in.', async (done) => {
+    const res = await req.deleted('/api/v1/responses/delete');
+    expect(res.status).toBe(401);
+    expect(res.body.errors).toEqual(
+      expect.arrayContaining([
+        {
+          msg: 'Unauthorized',
+        },
+      ]),
+    );
+    done();
+  });
+});

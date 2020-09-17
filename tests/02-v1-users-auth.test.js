@@ -38,13 +38,13 @@ describe('Registration', () => {
     done();
   });
 
-  it('should respond with a 200 and authenticated message', async (done) => {
+  it('should respond with a 201 and authenticated message', async (done) => {
     const res = await req.post('/api/v1/users/register').send({
       email: 'test@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.body).toEqual({
       registered: true,
       users: { email: 'test@test.com' },
@@ -125,6 +125,32 @@ describe('Refresh Token', () => {
     expect(res.body.accessToken).toBeDefined();
     expect(res.header('set-cookie')).stringContaining('jrt');
     commonInfo.accessToken = res.body.accessToken;
+    done();
+  });
+});
+
+describe('Delete user', () => {
+  it('should respond with a 200 if the user is deleted.', async (done) => {
+    const res = await req
+      .delete('/api/v1/users/delete')
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    expect(res.status).toBe(204);
+    expect(res.body).toEqual({
+      deleted: true,
+    });
+    done();
+  });
+
+  it('should respond with a 401 if the user is not logged in.', async (done) => {
+    const res = await req.delete('/api/v1/users/delete');
+    expect(res.status).toBe(401);
+    expect(res.body.errors).toEqual(
+      expect.arrayContaining([
+        {
+          msg: 'Unauthorized',
+        },
+      ]),
+    );
     done();
   });
 });

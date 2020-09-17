@@ -163,3 +163,29 @@ describe('Get Specific Survey', () => {
     done();
   });
 });
+
+describe('Delete survey', () => {
+  it('should respond with a 200 if the survey is deleted.', async (done) => {
+    const res = await req
+      .delete('/api/v1/surveys/delete')
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    expect(res.status).toBe(204);
+    expect(res.body).toEqual({
+      deleted: true,
+    });
+    done();
+  });
+
+  it('should respond with a 401 if the user is not logged in.', async (done) => {
+    const res = await req.delete('/api/v1/surveys/delete');
+    expect(res.status).toBe(401);
+    expect(res.body.errors).toEqual(
+      expect.arrayContaining([
+        {
+          msg: 'Unauthorized',
+        },
+      ]),
+    );
+    done();
+  });
+});
