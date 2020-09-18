@@ -14,7 +14,7 @@ module.exports = {
       respondent: {
         type: Sequelize.STRING,
       },
-      questionId: {
+      QuestionId: {
         type: Sequelize.BIGINT,
         references: {
           model: 'Questions',

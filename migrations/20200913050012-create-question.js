@@ -19,7 +19,7 @@ module.exports = {
         allowNull: false,
         defaultValue: 'text',
       },
-      surveyId: {
+      SurveyId: {
         type: Sequelize.BIGINT,
         defaultValue: null,
         references: {

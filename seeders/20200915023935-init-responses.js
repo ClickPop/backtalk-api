@@ -15,7 +15,7 @@ module.exports = {
         ];
       responses.push({
         value: loremIpsum(),
-        questionId: question.id,
+        QuestionId: question.id,
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
       });

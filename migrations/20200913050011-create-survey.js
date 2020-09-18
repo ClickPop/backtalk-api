@@ -14,7 +14,7 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
-      userId: {
+      UserId: {
         type: Sequelize.BIGINT,
         defaultValue: null,
         references: {

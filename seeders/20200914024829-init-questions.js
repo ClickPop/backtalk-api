@@ -10,7 +10,7 @@ module.exports = {
       questions.push({
         prompt: `Random Question ${i + 1}`,
         type: 'text',
-        surveyId: surveys[0][i].id,
+        SurveyId: surveys[0][i].id,
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
       });
