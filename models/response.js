@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       value: DataTypes.STRING,
       respondent: DataTypes.STRING,
-      questionId: DataTypes.BIGINT,
+      QuestionId: DataTypes.BIGINT,
     },
     {
       sequelize,

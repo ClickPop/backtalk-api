@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.TEXT,
       value: DataTypes.STRING,
       trigger: DataTypes.STRING,
-      question_id: {
+      Question_id: {
         type: DataTypes.BIGINT,
         defaultValue: null,
       },

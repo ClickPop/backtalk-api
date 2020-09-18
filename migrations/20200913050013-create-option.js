@@ -20,7 +20,7 @@ module.exports = {
       trigger: {
         type: Sequelize.STRING,
       },
-      questionId: {
+      QuestionId: {
         type: Sequelize.BIGINT,
         default: null,
         references: {

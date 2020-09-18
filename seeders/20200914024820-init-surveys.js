@@ -12,7 +12,7 @@ module.exports = {
       surveys.push({
         title: `Random Survey ${i}`,
         description: loremIpsum(),
-        userId:
+        UserId:
           users[0][Math.floor(Math.random() + Math.random() * users.length)].id,
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),

@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.survey = this.belongsTo(models.Survey);
-      this.options = this.hasMany(models.Optiion);
+      // this.options = this.hasMany(models.Option);
+      this.responses = this.hasMany(models.Response);
     }
   }
   Question.init(
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 'text',
       },
-      survey_id: {
+      SurveyId: {
         type: DataTypes.BIGINT,
         defaultValue: null,
       },
