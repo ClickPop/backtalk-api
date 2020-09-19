@@ -114,7 +114,7 @@ describe('Login', () => {
     });
     expect(res.status).toBe(200);
     expect(res.body.accessToken).toBeDefined();
-    expect(res.header('set-cookie')).stringContaining('jrt');
+    expect(res.header['set-cookie'][0]).toMatch(/jrt/);
     done();
   });
 });
@@ -123,7 +123,7 @@ describe('Refresh Token', () => {
   it('should respond with a 200 and an updated access/refresh token when given a valid refresh token', async (done) => {
     const res = await req.post('/api/v1/auth/refresh_token');
     expect(res.body.accessToken).toBeDefined();
-    expect(res.header('set-cookie')).stringContaining('jrt');
+    expect(res.header['set-cookie'][0]).toMatch(/jrt/);
     commonInfo.accessToken = res.body.accessToken;
     done();
   });
