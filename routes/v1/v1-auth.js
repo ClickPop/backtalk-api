@@ -6,61 +6,71 @@ const {
   getRefreshToken,
   checkRefreshToken,
 } = require('../../helpers/jwt');
+const {
+  checkEmail,
+  checkPassword,
+  checkValidationResult,
+} = require('../../middleware/validate');
 const router = express.Router();
 
-router.post('/login', async (req, res, next) => {
-  try {
-    const user = await User.findOne({ where: { email: req.body.email } });
-    if (!user) {
-      return next({
-        status: 401,
+router.post(
+  '/login',
+  [checkEmail, checkPassword],
+  checkValidationResult,
+  async (req, res, next) => {
+    try {
+      const user = await User.findOne({ where: { email: req.body.email } });
+      if (!user) {
+        return next({
+          status: 401,
+          errors: [
+            {
+              msg: 'Invalid email or password',
+              location: 'body',
+            },
+          ],
+        });
+      }
+
+      const auth = await compare(req.body.password, user.password);
+      if (!auth) {
+        return next({
+          status: 401,
+          errors: [
+            {
+              msg: 'Invalid email or password',
+              location: 'body',
+            },
+          ],
+        });
+      }
+
+      const accessToken = await getAccessToken(user.id);
+      const refreshToken = await getRefreshToken(user.id);
+
+      return res
+        .cookie('jrt', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          signed: true,
+        })
+        .status(200)
+        .json({
+          accessToken,
+        });
+    } catch (error) {
+      console.error(error);
+      next({
+        status: 500,
         errors: [
           {
-            msg: 'Invalid email or password',
-            location: 'body',
+            msg: 'Server error',
           },
         ],
       });
     }
-
-    const auth = await compare(req.body.password, user.password);
-    if (!auth) {
-      return next({
-        status: 401,
-        errors: [
-          {
-            msg: 'Invalid email or password',
-            location: 'body',
-          },
-        ],
-      });
-    }
-
-    const accessToken = await getAccessToken(user.id);
-    const refreshToken = await getRefreshToken(user.id);
-
-    return res
-      .cookie('jrt', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        signed: true,
-      })
-      .status(200)
-      .json({
-        accessToken,
-      });
-  } catch (error) {
-    console.error(error);
-    next({
-      status: 500,
-      errors: [
-        {
-          msg: 'Server error',
-        },
-      ],
-    });
-  }
-});
+  },
+);
 
 router.post('/refresh_token', async (req, res, next) => {
   try {
@@ -76,10 +86,9 @@ router.post('/refresh_token', async (req, res, next) => {
       });
     }
 
-    const user = await checkRefreshToken(jrt);
-
-    const accessToken = await getAccessToken(user.id);
-    const refreshToken = await getRefreshToken(user.id);
+    const auth = await checkRefreshToken(jrt);
+    const accessToken = await getAccessToken(auth.user.id);
+    const refreshToken = await getRefreshToken(auth.user.id);
 
     return res
       .cookie('jrt', refreshToken, {

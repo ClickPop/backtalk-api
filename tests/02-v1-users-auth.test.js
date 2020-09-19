@@ -14,21 +14,25 @@ describe('Registration', () => {
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
         {
+          value: 't',
           msg: 'Password must be at least 8 characters',
           location: 'body',
           param: 'password',
         },
         {
+          value: 't',
           msg: 'Password must include at least one uppercase letter',
           location: 'body',
           param: 'password',
         },
         {
+          value: 't',
           msg: 'Password must include at least one number',
           location: 'body',
           param: 'password',
         },
         {
+          value: 't',
           msg: 'Password must include at least one special character',
           location: 'body',
           param: 'password',
