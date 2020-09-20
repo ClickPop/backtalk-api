@@ -8,12 +8,12 @@ const { encode } = new HashIds(process.env.HASH_SECRET);
 describe('Surveys', () => {
   beforeAll(async () => {
     await req.post('/api/v1/users/register').send({
-      email: 'test@test.com',
+      email: 'test1@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
     const res = await req.post('/api/v1/auth/login').send({
-      email: 'test@test.com',
+      email: 'test1@test.com',
       password: 'Test1234!',
     });
     commonInfo.accessToken = res.body.accessToken;
@@ -55,6 +55,25 @@ describe('Surveys', () => {
         expect(question).toHaveProperty('description');
         expect(question).toHaveProperty('type');
       });
+      await req
+        .post('/api/v1/surveys/new')
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .send({
+          title: 'Test Title 2',
+          description: 'This is a test description',
+          questions: [
+            {
+              prompt: 'This is question 1 prompt',
+              description: 'This is question 1 description',
+              type: 'text',
+            },
+            {
+              prompt: 'This is question 2 prompt',
+              description: 'This is question 2 description',
+              type: 'text',
+            },
+          ],
+        });
       done();
     });
 
