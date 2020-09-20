@@ -9,8 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.user = this.belongsTo(models.User);
-      this.questions = this.hasMany(models.Question);
+      this.user = this.belongsTo(models.User, {
+        onDelete: 'SET DEFAULT',
+      });
+      this.questions = this.hasMany(models.Question, { onDelete: 'SET NULL' });
     }
   }
   Survey.init(

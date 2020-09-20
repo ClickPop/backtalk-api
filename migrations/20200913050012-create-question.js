@@ -26,6 +26,7 @@ module.exports = {
           model: 'Surveys',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

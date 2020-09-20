@@ -125,4 +125,44 @@ router.get('/:hash', async (req, res, next) => {
   }
 });
 
+router.delete('/delete', authenticate, async (req, res, next) => {
+  try {
+    const id = req.body.surveyId;
+    if (!id) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+    const survey = await Survey.destroy({
+      where: {
+        id,
+        UserId: req.user.id,
+      },
+    });
+    if (survey < 1) {
+      return res.status(200).json({ deleted: false });
+    }
+    res.status(200).json({
+      deleted: true,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
 module.exports = router;

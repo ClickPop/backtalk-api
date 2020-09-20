@@ -194,7 +194,7 @@ describe('Surveys', () => {
       const res = await req
         .delete('/api/v1/surveys/delete')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
-        .send({ surveyId: 0 });
+        .send({ surveyId: commonInfo.firstSurvey.id });
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
         deleted: true,
