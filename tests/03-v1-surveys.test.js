@@ -3,7 +3,7 @@ const app = require('../app');
 const req = supertest.agent(app);
 const commonInfo = require('./commonData');
 const HashIds = require('hashids/cjs');
-const { encode } = new HashIds(process.env.HASH_SECRET);
+const hashIds = new HashIds(process.env.HASH_SECRET, 8);
 
 describe('Surveys', () => {
   beforeAll(async () => {
@@ -55,6 +55,7 @@ describe('Surveys', () => {
         expect(question).toHaveProperty('description');
         expect(question).toHaveProperty('type');
       });
+      commonInfo.firstSurvey = res.body.result;
       await req
         .post('/api/v1/surveys/new')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
@@ -157,7 +158,7 @@ describe('Surveys', () => {
   describe('Get Specific Survey', () => {
     it('should respond with a 200 and a specific survey', async (done) => {
       const res = await req
-        .get(`/api/v1/surveys/${encode(commonInfo.firstSurvey.id)}`)
+        .get(`/api/v1/surveys/${hashIds.encode(commonInfo.firstSurvey.id)}`)
         .set('Authorization', `Bearer ${commonInfo.accessToken}`);
       expect(res.status).toBe(200);
       expect(res.body.result.title).toBe('Test Title');
@@ -181,21 +182,6 @@ describe('Surveys', () => {
           {
             msg: 'Not Found',
             location: 'url',
-          },
-        ]),
-      );
-      done();
-    });
-
-    it('should respond with a 401 if the user is not logged in.', async (done) => {
-      const res = await req.get(
-        `/api/v1/surveys/${encode(commonInfo.firstSurvey.id)}`,
-      );
-      expect(res.status).toBe(401);
-      expect(res.body.errors).toEqual(
-        expect.arrayContaining([
-          {
-            msg: 'Unauthorized',
           },
         ]),
       );

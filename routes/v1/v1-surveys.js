@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../../middleware/authenticate');
@@ -6,8 +7,9 @@ const {
   checkTitle,
   checkSurveyQuestions,
 } = require('../../middleware/validate');
-
 const { Survey } = require('../../models');
+const HashIds = require('hashids/cjs');
+const hashIds = new HashIds(process.env.HASH_SECRET, 8);
 
 router.post(
   '/new',
@@ -71,6 +73,46 @@ router.get('/', authenticate, async (req, res, next) => {
       results,
     });
   } catch (err) {
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
+router.get('/:hash', async (req, res, next) => {
+  try {
+    const id = hashIds.decode(req.params.hash)[0];
+    if (!id) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+    const survey = await Survey.findOne({
+      where: {
+        id,
+      },
+      include: [Survey.questions],
+    });
+    let result = survey.toJSON();
+    result = { ...result, questions: result.Questions };
+    delete result.Questions;
+    res.status(200).json({
+      result,
+    });
+  } catch (err) {
+    console.error(err);
     next({
       status: 500,
       stack: err,
