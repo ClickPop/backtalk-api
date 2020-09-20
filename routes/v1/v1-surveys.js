@@ -1,26 +1,34 @@
 const express = require('express');
 const router = express.Router();
+const authenticate = require('../../middleware/authenticate');
 const {
   checkValidationResult,
   checkTitle,
-} = require('../../middleware/validation');
+  checkSurveyQuestions,
+} = require('../../middleware/validate');
 
-const { Survey } = require('../../models');
+const { Survey, Question } = require('../../models');
 
 router.post(
   '/new',
-  [checkTitle],
+  authenticate,
+  [checkTitle, checkSurveyQuestions],
   checkValidationResult,
   async (req, res, next) => {
     try {
-      let mapped = {
+      let sanitizedSurvey = {
         title: req.body.title,
         description: req.body.description || null,
+        Questions: req.body.questions,
       };
-
-      const survey = await Survey.create({
-        ...mapped,
-      });
+      const survey = await Survey.create(
+        {
+          ...sanitizedSurvey,
+        },
+        {
+          include: [Question],
+        },
+      );
 
       return res.json({
         created: true,
