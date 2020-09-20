@@ -1,3 +1,4 @@
+require('./helpers/prototypes');
 require('dotenv').config();
 const app = require('./app');
 

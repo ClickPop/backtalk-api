@@ -32,9 +32,9 @@ router.post(
           include: [Survey.questions],
         },
       );
-      let result = survey.toJSON();
-      result = { ...result, questions: result.Questions };
-      delete result.Questions;
+
+      let result = survey.toJSON().renameProperty('Questions', 'questions');
+      result = { ...result };
       return res.status(200).json({
         created: true,
         result,
@@ -64,9 +64,8 @@ router.get('/', authenticate, async (req, res, next) => {
       include: [Survey.questions],
     });
     let results = surveys.map((survey) => {
-      let json = survey.toJSON();
-      json = { ...json, questions: json.Questions };
-      delete json.Questions;
+      let json = survey.toJSON().renameProperty('Questions', 'questions');
+      json = { ...json };
       return json;
     });
     res.status(200).json({
@@ -105,9 +104,8 @@ router.get('/:hash', async (req, res, next) => {
       },
       include: [Survey.questions],
     });
-    let result = survey.toJSON();
-    result = { ...result, questions: result.Questions };
-    delete result.Questions;
+    let result = survey.toJSON().renameProperty('Questions', 'questions');
+    result = { ...result };
     res.status(200).json({
       result,
     });

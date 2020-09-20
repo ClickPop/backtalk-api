@@ -7,7 +7,7 @@ const getAccessToken = (userId) => {
       { user: { id: userId } },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: '5m',
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
       },
       (err, token) => {
         if (err) {
@@ -25,7 +25,7 @@ const getRefreshToken = (userId) => {
       { user: { id: userId } },
       process.env.REFRESH_TOKEN_SECRET,
       {
-        expiresIn: '7d',
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
       },
       (err, token) => {
         if (err) {
