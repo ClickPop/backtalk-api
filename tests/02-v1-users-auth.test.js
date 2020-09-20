@@ -158,31 +158,3 @@ describe('Delete user', () => {
     done();
   });
 });
-
-describe('Setup User for Tests', () => {
-  it('should create the test user', async (done) => {
-    const res = await req.post('/api/v1/users/register').send({
-      email: 'test@test.com',
-      name: 'Test User',
-      password: 'Test1234!',
-    });
-    expect(res.status).toBe(201);
-    expect(res.body).toEqual({
-      registered: true,
-      users: { email: 'test@test.com' },
-    });
-    done();
-  });
-
-  it('should login the test user', async (done) => {
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'test@test.com',
-      password: 'Test1234!',
-    });
-    expect(res.status).toBe(200);
-    expect(res.body.accessToken).toBeDefined();
-    expect(res.header['set-cookie'][0]).toMatch(/jrt/);
-    commonInfo.accessToken = res.body.accessToken;
-    done();
-  });
-});

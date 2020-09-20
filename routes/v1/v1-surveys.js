@@ -29,10 +29,11 @@ router.post(
           include: [Question],
         },
       );
-
+      let result = survey.toJSON();
+      result = { ...result, questions: result.Questions };
       return res.json({
         created: true,
-        survey,
+        result,
       });
     } catch (err) {
       next({
