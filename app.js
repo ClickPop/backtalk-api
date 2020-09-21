@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./helpers/prototypes');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');

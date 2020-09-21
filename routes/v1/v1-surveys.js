@@ -35,6 +35,7 @@ router.post(
 
       let result = survey.toJSON().renameProperty('Questions', 'questions');
       result = { ...result };
+
       return res.status(200).json({
         created: true,
         result,
