@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       type: {
-        type: Sequelize.ENUM('bool', 'select', 'text'),
+        type: Sequelize.ENUM('text'),
         allowNull: false,
         defaultValue: 'text',
       },
@@ -26,6 +26,7 @@ module.exports = {
           model: 'Surveys',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Question extends Model {
     /**
@@ -9,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.survey = this.belongsTo(models.Survey);
-      // this.options = this.hasMany(models.Option);
       this.responses = this.hasMany(models.Response);
     }
   }
@@ -18,18 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       prompt: DataTypes.TEXT,
       description: DataTypes.TEXT,
       type: {
-        type: DataTypes.ENUM('bool', 'select', 'text'),
+        type: DataTypes.ENUM('text'),
         allowNull: false,
         defaultValue: 'text',
-      },
-      SurveyId: {
-        type: DataTypes.BIGINT,
-        defaultValue: null,
       },
     },
     {
       sequelize,
-      modelName: 'Question',
     },
   );
   return Question;

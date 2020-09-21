@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Response extends Model {
     /**
@@ -16,11 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       value: DataTypes.STRING,
       respondent: DataTypes.STRING,
-      QuestionId: DataTypes.BIGINT,
     },
     {
       sequelize,
-      modelName: 'Response',
     },
   );
   return Response;
