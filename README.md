@@ -1,3 +1,5 @@
+![Test](https://github.com/ClickPop/survey-app-server/workflows/Test/badge.svg?branch=master)
+
 ## Installation
 
 ### Prerequesites
