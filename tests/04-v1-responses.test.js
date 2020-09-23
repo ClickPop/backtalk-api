@@ -2,44 +2,69 @@ const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
 const commonInfo = require('./commonData');
-const HashIds = require('hashids/cjs');
-const { encode } = new HashIds(process.env.HASH_SECRET);
+const hashIds = require('../helpers/hashIds');
 
 describe('Responses', () => {
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     await req.post('/api/v1/users/register').send({
-      email: 'test@test.com',
+      email: 'test2@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
 
     const res = await req.post('/api/v1/auth/login').send({
-      email: 'test@test.com',
+      email: 'test2@test.com',
       password: 'Test1234!',
     });
     commonInfo.accessToken = res.body.accessToken;
+
+    const survey = await req
+      .post('/api/v1/surveys/new')
+      .set('Authorization', `Bearer ${res.body.accessToken}`)
+      .send({
+        title: 'Test Title',
+        description: 'This is a test description',
+        questions: [
+          {
+            prompt: 'This is question 1 prompt',
+            description: 'This is question 1 description',
+            type: 'text',
+          },
+          {
+            prompt: 'This is question 2 prompt',
+            description: 'This is question 2 description',
+            type: 'text',
+          },
+        ],
+      });
+    commonInfo.firstSurvey = survey.body;
+    done();
   });
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     await req
       .delete('/api/v1/users/delete')
       .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    done();
   });
 
   describe('New Response', () => {
     it('should respond with a 200 and create a response for a given survey', async (done) => {
-      const res = await req.post('api/v1/responses/new').send({
-        survey: 0,
-        responses: commonInfo.firstSurvey.questions.map((question, i) => ({
+      const responses = commonInfo.firstSurvey.result.questions.map(
+        (question, i) => ({
           value: `Response to question ${i + 1}`,
           respondent: 'Greg',
           questionId: question.id,
-        })),
+        }),
+      );
+      const res = await req.post('/api/v1/responses/new').send({
+        responses,
       });
       expect(res.status).toBe(200);
-      expect(res.body.result).toBeDefined();
-      expect(res.body.result).toHaveProperty('responses');
-      expect(Array.isArray(res.body.result.responses)).toBeTruthy();
+      expect(res.body).toHaveProperty('results');
+      expect(res.body.results).toBeDefined();
+      expect(Array.isArray(res.body.results)).toBeTruthy();
+      commonInfo.firstResponse = res.body.results[0];
       done();
     });
   });
@@ -47,7 +72,11 @@ describe('Responses', () => {
   describe('Get Responses', () => {
     it('should respond with a 200 and all the responses for a given survey', async (done) => {
       const res = await req
-        .get(`/api/v1/responses/${encode(commonInfo.firstSurvey.id)}`)
+        .get(
+          `/api/v1/responses/${hashIds.encode(
+            commonInfo.firstSurvey.result.id,
+          )}`,
+        )
         .set('Authorization', `Bearer ${commonInfo.accessToken}`);
       expect(res.body).toHaveProperty('results');
       expect(Array.isArray(res.body.results)).toBeTruthy();
@@ -92,7 +121,7 @@ describe('Responses', () => {
       const res = await req
         .delete('/api/v1/responses/delete')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
-        .send({ responseId: 0 });
+        .send({ responseId: commonInfo.firstResponse.id });
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
         deleted: true,

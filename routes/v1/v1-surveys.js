@@ -8,8 +8,13 @@ const {
   checkSurveyQuestions,
 } = require('../../middleware/validate');
 const { Survey } = require('../../models');
-const HashIds = require('hashids/cjs');
-const hashIds = new HashIds(process.env.HASH_SECRET, 8);
+const hashIds = require('../../helpers/hashIds');
+
+router.get('/getHash', async (req, res) => {
+  const { num } = req.query;
+  const hash = await hashIds.encode(num);
+  res.json({ hash });
+});
 
 router.post(
   '/new',
@@ -34,8 +39,6 @@ router.post(
       );
 
       let result = survey.toJSON().renameProperty('Questions', 'questions');
-      result = { ...result };
-
       return res.status(200).json({
         created: true,
         result,
@@ -64,11 +67,9 @@ router.get('/', authenticate, async (req, res, next) => {
       offset: req.query.offset || 0,
       include: [Survey.questions],
     });
-    let results = surveys.map((survey) => {
-      let json = survey.toJSON().renameProperty('Questions', 'questions');
-      json = { ...json };
-      return json;
-    });
+    let results = surveys.map((survey) =>
+      survey.toJSON().renameProperty('Questions', 'questions'),
+    );
     res.status(200).json({
       results,
     });
@@ -87,7 +88,7 @@ router.get('/', authenticate, async (req, res, next) => {
 
 router.get('/:hash', async (req, res, next) => {
   try {
-    const id = hashIds.decode(req.params.hash)[0];
+    const id = await hashIds.decode(req.params.hash)[0];
     if (!id) {
       return next({
         status: 404,
@@ -111,7 +112,6 @@ router.get('/:hash', async (req, res, next) => {
       result,
     });
   } catch (err) {
-    console.error(err);
     next({
       status: 500,
       stack: err,
@@ -151,7 +151,6 @@ router.delete('/delete', authenticate, async (req, res, next) => {
       deleted: true,
     });
   } catch (err) {
-    console.error(err);
     next({
       status: 500,
       stack: err,
