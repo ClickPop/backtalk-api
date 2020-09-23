@@ -17,9 +17,9 @@ jobs:
     services:
       postgres:
         image: postgres
-
+        ports:
+          - 5432:5432
         env:
-          POSTGRES_USER: testuser
           POSTGRES_PASSWORD: postgres
 
         options: >-
@@ -42,9 +42,7 @@ jobs:
     - run: npm run build --if-present
     - run: npm test 
       env:
-        DB_TEST_HOST: localhost
-        DB_TEST_PORT: 5432
-        DB_TEST_USERNAME: testuser
+        DB_TEST_USERNAME: postgres
         DB_TEST_PASSWORD: postgres
         DB_TEST_DATABASE: backtalk_test
         HASH_SECRET: ${{ secrets.HASH_SECRET }}
