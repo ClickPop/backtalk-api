@@ -1,7 +1,7 @@
+const commonInfo = require('./commonData');
 const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
-const commonInfo = require('./commonData');
 
 describe('Registration', () => {
   it('should respond with a 422 and an error message', async (done) => {

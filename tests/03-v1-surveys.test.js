@@ -1,28 +1,30 @@
+const commonInfo = require('./commonData');
 const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
-const commonInfo = require('./commonData');
-const HashIds = require('hashids/cjs');
-const hashIds = new HashIds(process.env.HASH_SECRET, 8);
+const hashIds = require('../helpers/hashIds');
 
 describe('Surveys', () => {
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     await req.post('/api/v1/users/register').send({
       email: 'test1@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
+
     const res = await req.post('/api/v1/auth/login').send({
       email: 'test1@test.com',
       password: 'Test1234!',
     });
     commonInfo.accessToken = res.body.accessToken;
+    done();
   });
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     await req
       .delete('/api/v1/users/delete')
       .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+    done();
   });
 
   describe('New Survey', () => {
@@ -205,7 +207,7 @@ describe('Surveys', () => {
     it('should respond with a 401 if the user is not logged in.', async (done) => {
       const res = await req
         .delete('/api/v1/surveys/delete')
-        .send({ surveyId: 0 });
+        .send({ surveyId: commonInfo.firstSurvey.id });
       expect(res.status).toBe(401);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([
