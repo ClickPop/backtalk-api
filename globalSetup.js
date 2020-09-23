@@ -16,13 +16,15 @@ const cmd = (cmd) => {
 
 module.exports = async () => {
   try {
-    const create = await cmd('NODE_ENV=test npm run db:create');
+    const create = await cmd('cross-env-shell NODE_ENV=test npm run db:create');
     // eslint-disable-next-line
     console.log(create);
-    const migrate = await cmd('NODE_ENV=test npm run migrate:fresh');
+    const migrate = await cmd(
+      'cross-env-shell NODE_ENV=test npm run migrate:fresh',
+    );
     // eslint-disable-next-line
     console.log(migrate);
-    const seed = await cmd('NODE_ENV=test npm run seed:fresh');
+    const seed = await cmd('cross-env-shell NODE_ENV=test npm run seed:fresh');
     // eslint-disable-next-line
     console.log(seed);
   } catch (err) {
