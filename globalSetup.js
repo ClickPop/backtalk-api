@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const env = process.env.NODE_ENV || 'development';
 
 const cmd = (cmd) => {
   return new Promise((res, rej) => {
@@ -17,16 +18,24 @@ const cmd = (cmd) => {
 module.exports = async () => {
   try {
     const create = await cmd('cross-env-shell NODE_ENV=test npm run db:create');
-    // eslint-disable-next-line
-    console.log(create);
+    if (env === 'development') {
+      // eslint-disable-next-line
+      console.log(create);
+    }
+
     const migrate = await cmd(
       'cross-env-shell NODE_ENV=test npm run migrate:fresh',
     );
-    // eslint-disable-next-line
-    console.log(migrate);
+    if (env === 'development') {
+      // eslint-disable-next-line
+      console.log(migrate);
+    }
+
     const seed = await cmd('cross-env-shell NODE_ENV=test npm run seed:fresh');
-    // eslint-disable-next-line
-    console.log(seed);
+    if (env === 'development') {
+      // eslint-disable-next-line
+      console.log(seed);
+    }
   } catch (err) {
     console.error(err);
   }

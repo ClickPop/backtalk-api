@@ -1,4 +1,6 @@
 const { exec } = require('child_process');
+const env = process.env.NODE_ENV || 'development';
+
 module.exports = async () => {
   exec(
     'cross-env-shell NODE_ENV=test npm run db:drop',
@@ -11,8 +13,11 @@ module.exports = async () => {
         console.error(err);
         return;
       }
-      //eslint-disable-next-line
-      console.log(stdout);
+
+      if (env === 'development') {
+        // eslint-disable-next-line
+        console.log(stdout);
+      }
     },
   );
 };
