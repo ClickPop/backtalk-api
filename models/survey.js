@@ -13,12 +13,18 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'SET DEFAULT',
       });
       this.questions = this.hasMany(models.Question, { onDelete: 'SET NULL' });
+      this.sessions = this.hasMany(models.Session, { onDelete: 'SET NULL' });
     }
   }
   Survey.init(
     {
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
+      seeded: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       sequelize,

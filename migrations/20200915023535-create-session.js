@@ -1,26 +1,34 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Sessions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      email: {
+      respondent: {
         type: Sequelize.STRING,
       },
-      password: {
+      userAgent: {
         type: Sequelize.STRING,
       },
-      name: {
+      ipAddress: {
         type: Sequelize.STRING,
       },
       seeded: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      SurveyId: {
+        type: Sequelize.BIGINT,
+        references: {
+          model: 'Surveys',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,
@@ -33,6 +41,6 @@ module.exports = {
     });
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Sessions');
   },
 };

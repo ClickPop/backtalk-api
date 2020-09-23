@@ -14,6 +14,19 @@ module.exports = {
       respondent: {
         type: Sequelize.STRING,
       },
+      seeded: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      // SessionId: {
+      //   type: Sequelize.BIGINT,
+      //   references: {
+      //     model: 'Sessions',
+      //     key: 'id',
+      //   },
+      //   onDelete: 'CASCADE',
+      // },
       QuestionId: {
         type: Sequelize.BIGINT,
         references: {

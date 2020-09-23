@@ -1,9 +1,11 @@
 'use strict';
+const path = require('path');
+require(path.resolve('helpers', 'prototypes'));
 const { hash } = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface) => {
-    return await queryInterface.bulkInsert('Users', [
+    let usersObject = [
       {
         email: 'graham@clickpopmedia.com',
         name: 'Graham Vasquez',
@@ -25,7 +27,11 @@ module.exports = {
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
       },
-    ]);
+    ];
+
+    usersObject = usersObject.isSeeded();
+
+    return await queryInterface.bulkInsert('Users', usersObject);
   },
 
   down: async (queryInterface) => {

@@ -14,6 +14,11 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
+      seeded: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       UserId: {
         type: Sequelize.BIGINT,
         defaultValue: null,

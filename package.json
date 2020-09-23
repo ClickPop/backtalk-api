@@ -19,7 +19,8 @@
     "test:verbose": "jest --verbose",
     "test:watch": "jest --watch",
     "lint": "eslint --cache --fix .",
-    "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*"
+    "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*",
+    "tester": "sequelize-cli $* --seeders-path"
   },
   "keywords": [],
   "author": "",

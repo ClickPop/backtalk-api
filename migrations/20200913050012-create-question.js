@@ -19,6 +19,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'text',
       },
+      seeded: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       SurveyId: {
         type: Sequelize.BIGINT,
         defaultValue: null,

@@ -2,7 +2,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Response extends Model {
+  class Session extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,14 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.question = this.belongsTo(models.Question);
-      this.session = this.belongsTo(models.Session);
+      this.survey = this.belongsTo(models.Survey);
+      this.responses = this.hasMany(models.Response);
     }
   }
-  Response.init(
+  Session.init(
     {
-      value: DataTypes.STRING,
       respondent: DataTypes.STRING,
+      userAgent: DataTypes.STRING,
+      ipAddress: DataTypes.STRING,
       seeded: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -28,5 +29,5 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
     },
   );
-  return Response;
+  return Session;
 };
