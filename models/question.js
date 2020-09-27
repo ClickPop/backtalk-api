@@ -2,17 +2,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Question extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      this.survey = this.belongsTo(models.Survey);
-      this.responses = this.hasMany(models.Response);
-    }
-  }
+  class Question extends Model {}
   Question.init(
     {
       prompt: DataTypes.TEXT,
@@ -27,5 +17,14 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
     },
   );
+  Question.associate = function (models) {
+    Question.hasMany(models.Response, {
+      as: 'responses',
+    });
+    Question.belongsToMany(models.Survey, {
+      through: 'SurveyQuestions',
+      onDelete: 'CASCADE',
+    });
+  };
   return Question;
 };

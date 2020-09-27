@@ -1,17 +1,9 @@
 'use strict';
 const { Model } = require('sequelize');
+const PROTECTED_ATTRIBUTES = ['password', 'createdAt', 'updatedAt'];
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      this.surveys = this.hasMany(models.Survey, { onDelete: 'SET NULL' });
-    }
-  }
+  class User extends Model {}
   User.init(
     {
       email: DataTypes.STRING,
@@ -22,5 +14,19 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
     },
   );
+
+  User.associate = function (models) {
+    User.hasMany(models.Survey);
+  };
+
+  User.toJSON = function () {
+    // hide protected fields
+    let attributes = Object.assign({}, this.get());
+    for (let a of PROTECTED_ATTRIBUTES) {
+      delete attributes[a];
+    }
+    return attributes;
+  };
+
   return User;
 };

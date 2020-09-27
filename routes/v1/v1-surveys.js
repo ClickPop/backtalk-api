@@ -7,7 +7,7 @@ const {
   checkTitle,
   checkSurveyQuestions,
 } = require('../../middleware/validate');
-const { Survey } = require('../../models');
+const { Survey, Question, Session, User } = require('../../models');
 const hashIds = require('../../helpers/hashIds');
 
 router.get('/getHash', async (req, res) => {
@@ -34,7 +34,7 @@ router.post(
           ...sanitizedSurvey,
         },
         {
-          include: [Survey.questions],
+          include: Question,
         },
       );
 
@@ -60,12 +60,22 @@ router.post(
 router.get('/', authenticate, async (req, res, next) => {
   try {
     const surveys = await Survey.findAll({
-      where: {
-        UserId: req.user.id,
-      },
       limit: req.query.count || 20,
       offset: req.query.offset || 0,
-      include: [Survey.questions],
+      attributes: {
+        exclude: ['UserId'],
+      },
+      include: [
+        {
+          model: User,
+          where: {
+            id: req.user.id,
+          },
+          attributes: ['id', 'email', 'name'],
+        },
+        Question,
+        Session,
+      ],
     });
     let results = surveys.map((survey) =>
       survey.toJSON().renameProperty('Questions', 'questions'),
@@ -104,7 +114,7 @@ router.get('/:hash', async (req, res, next) => {
       where: {
         id,
       },
-      include: [Survey.questions],
+      include: [Question, Session],
     });
     let result = survey.toJSON().renameProperty('Questions', 'questions');
     result = { ...result };
@@ -140,9 +150,16 @@ router.delete('/delete', authenticate, async (req, res, next) => {
     }
     const survey = await Survey.destroy({
       where: {
-        id,
-        UserId: req.user.id,
+        id: id,
       },
+      include: [
+        {
+          model: User,
+          where: {
+            id: req.user.id,
+          },
+        },
+      ],
     });
     if (survey < 1) {
       return res.status(200).json({ deleted: false });

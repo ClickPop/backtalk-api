@@ -1,26 +1,35 @@
 'use strict';
+const path = require('path');
+const { Survey, Question } = require(path.resolve('models'));
 
 module.exports = {
-  up: async (queryInterface) => {
-    const surveys = await queryInterface.sequelize.query(
-      'SELECT id FROM "Surveys"',
-    );
-    const questions = [];
-    for (let i = 0; i < surveys[0].length; i++) {
-      questions.push({
-        prompt: `Random Question ${i + 1}`,
+  up: async () => {
+    const shared_question = await Question.create({
+      prompt: `Shared Question`,
+      type: 'text',
+    });
+
+    const surveys = await Survey.findAll();
+    await shared_question.addSurveys(surveys);
+    let question;
+    for (let i = 0; i < surveys.length; i++) {
+      question = await Question.create({
+        prompt: `Random Question ${surveys[i].id}`,
         type: 'text',
-        SurveyId: surveys[0][i].id,
-        createdAt: new Date().toUTCString(),
-        updatedAt: new Date().toUTCString(),
       });
+      surveys[i].addQuestion(question);
+      question = null;
     }
 
-    return await queryInterface.bulkInsert('Questions', questions);
+    return true;
   },
 
   down: async (queryInterface) => {
-    return await queryInterface.bulkDelete('Questions', null, {
+    await queryInterface.bulkDelete('SurveyQuestions', null, {
+      truncate: true,
+      cascade: true,
+    });
+    await queryInterface.bulkDelete('Questions', null, {
       truncate: true,
       cascade: true,
     });
