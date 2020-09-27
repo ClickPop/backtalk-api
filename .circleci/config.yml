@@ -1,7 +1,24 @@
-version: 2.1
-orbs:
-  node: circleci/node@3.0.0
-workflows:
-  node-tests:
-    jobs:
-      - node/test
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    working_directory: ~/backtalk-api
+    docker:
+      - image: circleci/node:7.10
+        environment:
+          PGHOST: 127.0.0.1
+          PGUSER: rockchalkwushock
+          NODE_ENV: test
+      - image: circleci/postgres:9.6.2-alpine
+        environment:
+          POSTGRES_DB: backtalk_test
+          POSTGRES_PASSWORD: rootroot
+          POSTGRES_USER: tester
+    steps:
+      - checkout
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
