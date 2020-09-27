@@ -2,25 +2,22 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Response extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      this.question = this.belongsTo(models.Question);
-    }
-  }
+  class Response extends Model {}
+
   Response.init(
     {
       value: DataTypes.STRING,
-      respondent: DataTypes.STRING,
     },
     {
       sequelize,
     },
   );
+
+  Response.associate = function (models) {
+    Response.belongsTo(models.Question);
+
+    Response.belongsTo(models.Session);
+  };
+
   return Response;
 };

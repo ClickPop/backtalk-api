@@ -1,25 +1,24 @@
 'use strict';
 const { loremIpsum } = require('lorem-ipsum');
-
+const { Survey, User } = require('../models');
 module.exports = {
-  up: async (queryInterface) => {
-    const users = await queryInterface.sequelize.query(
-      'SELECT id from "Users"',
-    );
+  up: async () => {
     const surveys = [];
+    const users = await User.findAll();
 
     for (let i = 0; i < 10; i++) {
-      surveys.push({
+      let survey = await Survey.create({
         title: `Random Survey ${i}`,
         description: loremIpsum(),
-        UserId:
-          users[0][Math.floor(Math.random() + Math.random() * users.length)].id,
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
       });
+      survey.setUser(users[Math.floor(Math.random() * users.length)]);
+      surveys.push(survey);
+      survey = undefined;
     }
 
-    return await queryInterface.bulkInsert('Surveys', surveys);
+    return true;
   },
 
   down: async (queryInterface) => {

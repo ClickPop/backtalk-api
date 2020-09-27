@@ -19,15 +19,6 @@ module.exports = {
         allowNull: false,
         defaultValue: 'text',
       },
-      SurveyId: {
-        type: Sequelize.BIGINT,
-        defaultValue: null,
-        references: {
-          model: 'Surveys',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
