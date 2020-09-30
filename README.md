@@ -1,4 +1,4 @@
-![Test](https://github.com/ClickPop/survey-app-server/workflows/Test/badge.svg?branch=master)
+![CircleCI](https://img.shields.io/circleci/build/gh/ClickPop/backtalk-api?label=Tests&style=for-the-badge)
 
 ## Installation
 
