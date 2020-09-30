@@ -16,7 +16,7 @@
     "seed": "sequelize-cli db:seed:all",
     "seed:fresh": "sequelize-cli db:seed:undo:all && npm run seed",
     "start": "nodemon server.js",
-    "test": "jest --silent --detectOpenHandles",
+    "test": "jest --detectOpenHandles",
     "test:verbose": "jest --verbose",
     "test:open": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
