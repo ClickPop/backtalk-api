@@ -21,7 +21,7 @@ module.exports = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: 'coverage',
+  coverageDirectory: 'reports/coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: ['/node_modules/'],
@@ -98,12 +98,10 @@ module.exports = {
   reporters: [
     'default',
     [
-      './node_modules/jest-html-reporter',
+      'jest-junit',
       {
-        pageTitle: 'Test Report',
-        outputPath: './test-results.html',
-        includeFailureMsg: true,
-        includeSuiteFailure: true,
+        outputDirectory: './reports/jest',
+        outputName: 'jest.xml',
       },
     ],
   ],

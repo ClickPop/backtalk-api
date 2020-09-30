@@ -33,7 +33,7 @@ jobs:
           name: Test Suite
           command: npm test
       - store_artifacts:
-          path: test-results.html
+          path: test-results.xml
           prefix: tests
       - store_artifacts:
           path: coverage
