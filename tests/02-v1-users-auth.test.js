@@ -4,6 +4,10 @@ const app = require('../app');
 const req = supertest.agent(app);
 
 describe('Registration', () => {
+  afterAll(async (done) => {
+    done();
+  });
+
   it('should respond with a 422 and an error message', async (done) => {
     const res = await req.post('/api/v1/users/register').send({
       email: 'test@test.com',

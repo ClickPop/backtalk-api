@@ -1,6 +1,6 @@
 const { sequelize } = require('./models');
 
 afterAll(async (done) => {
-  await sequelize.close();
+  sequelize.close().then(done());
   done();
 });
