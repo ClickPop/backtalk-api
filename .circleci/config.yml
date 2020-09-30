@@ -8,7 +8,7 @@ workflows:
 
 jobs:
   build:
-    working_directory: ~/mern-starter
+    working_directory: ~/backtalk-api
     docker:
       - image: circleci/node:14.11.0
       - image: circleci/postgres:12.4
@@ -33,13 +33,13 @@ jobs:
           name: Test Suite
           command: npm test
       - store_artifacts:
-          path: reports/jest/jest.xml
-          prefix: tests
+          path: reports/jest
+          prefix: jest
       - store_artifacts:
           path: reports/coverage
           prefix: coverage
       - store_test_results:
-          path: reports/jest/jest.xml
+          path: reports
 
     environment:
       DB_TEST_USERNAME: postgres
