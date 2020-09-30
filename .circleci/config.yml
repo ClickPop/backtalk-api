@@ -33,13 +33,13 @@ jobs:
           name: Test Suite
           command: npm test
       - store_artifacts:
-          path: test-results.xml
+          path: reports/jest/jest.xml
           prefix: tests
       - store_artifacts:
-          path: coverage
+          path: reports/coverage
           prefix: coverage
       - store_test_results:
-          path: test-results.xml
+          path: reports/jest/jest.xml
 
     environment:
       DB_TEST_USERNAME: postgres
