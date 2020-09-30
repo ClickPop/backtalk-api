@@ -1,4 +1,4 @@
-![CircleCI](https://img.shields.io/circleci/build/gh/ClickPop/backtalk-api?label=Tests&style=for-the-badge)
+[![CircleCI](https://img.shields.io/circleci/build/gh/ClickPop/backtalk-api?label=Tests&style=for-the-badge)](https://circleci.com/gh/ClickPop/backtalk-api)
 
 ## Installation
 
