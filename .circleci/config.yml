@@ -36,10 +36,10 @@ jobs:
           path: test-results.html
           prefix: tests
       - store_artifacts:
-          path: reports/coverage
+          path: coverage
           prefix: coverage
       - store_test_results:
-          path: test-results.html
+          path: test-results.xml
 
     environment:
       DB_TEST_USERNAME: postgres
