@@ -1,0 +1,7 @@
+node_modules/
+Dockerfile
+docker-compose.yml
+.circleci/
+data/
+reports/
+.env.sample

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: backtalk-db
+    image: postgres
+    restart: always
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      # POSTGRES_USERNAME: ${DB_USERNAME}
+      # POSTGRES_DATABASE: ${DB_DATABASE}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  api:
+    container_name: backtalk-api
+    build: .
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/var/app
+    environment:
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_HOST=${DB_HOST}
+      - HASH_SECRET=${HASH_SECRET}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}
+      - REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}
+    command: npm run install:start
