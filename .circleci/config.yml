@@ -5,6 +5,12 @@ workflows:
   build:
     jobs:
       - build
+  deploy:
+    jobs:
+      - deploy:
+        filters:
+          branches:
+            - master
 
 jobs:
   build:
@@ -40,6 +46,11 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: reports
+
+    deploy:
+      docker:
+        - image: circleci/golang:1.10
+      steps:
 
     environment:
       DB_TEST_USERNAME: postgres

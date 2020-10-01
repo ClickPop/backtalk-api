@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "setup:start": "npm run setup && npm start",
+    "install:start": "npm install && npm start",
     "db:create": "sequelize-cli db:create",
     "db:drop": "sequelize-cli db:drop",
     "db:recreate": "sequelize-cli db:drop && sequelize-cli db:create",
