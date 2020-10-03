@@ -8,8 +8,6 @@ services:
     volumes:
       - ../data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USERNAME: ${DB_USERNAME}
-      POSTGRES_DATABASE: ${DB_DATABASE}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   api:
     container_name: backtalk-api
