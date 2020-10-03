@@ -58,6 +58,7 @@ jobs:
     docker:
       - image: circleci/golang
     steps:
+      - checkout
       - attach_workspace:
           at: ~/backtalk-api
       - add_ssh_keys
