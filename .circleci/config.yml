@@ -69,7 +69,7 @@ jobs:
           ssh circleci@api.backtalk.io \<< 'ENDSSH'
           cd backtalk-api
           docker-compose down
-          NODE_ENV=$NODE_ENV \
+          NODE_ENV=production \
           DB_USERNAME=$DB_USERNAME \
           DB_PASSWORD=$DB_PASSWORD \
           DB_DATABASE=$DB_DATABASE \
