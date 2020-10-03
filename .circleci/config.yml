@@ -72,8 +72,8 @@ jobs:
           NODE_ENV=production \
           DB_USERNAME=$DB_USERNAME \
           DB_PASSWORD=$DB_PASSWORD \
-          DB_DATABASE=backtalk-db \
-          DB_HOST=$DB_PROD_HOST \
+          DB_DATABASE=$DB_DATABASE \
+          DB_HOST=backtalk-db \
           HASH_SECRET=$HASH_SECRET \
           ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET \
           REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET \
