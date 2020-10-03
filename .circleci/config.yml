@@ -62,7 +62,6 @@ jobs:
           at: ~/dev/github/survey-app-server
       - add_ssh_keys
       - run: |
-          mkdir ~/.ssh
           ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
           ssh circleci@api.backtalk.io \<< 'ENDSSH'
           ls -la
