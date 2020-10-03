@@ -67,5 +67,6 @@ jobs:
           ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
           rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-api
           ssh circleci@api.backtalk.io \<< 'ENDSSH'
-          ls
+          cd backtalk-api
+          docker-compose up -d --build
           ENDSSH
