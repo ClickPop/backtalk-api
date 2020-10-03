@@ -8,8 +8,8 @@ services:
     volumes:
       - ../data:/var/lib/postgresql/data
     environment:
-      # POSTGRES_USERNAME: ${DB_USERNAME}
-      # POSTGRES_DATABASE: ${DB_DATABASE}
+      POSTGRES_USERNAME: ${DB_USERNAME}
+      POSTGRES_DATABASE: ${DB_DATABASE}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   api:
     container_name: backtalk-api
@@ -22,6 +22,7 @@ services:
     volumes:
       - ./:/var/app
     environment:
+      - NODE_ENV=${NODE_ENV}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE}
@@ -32,4 +33,4 @@ services:
       - COOKIE_SECRET=${COOKIE_SECRET}
       - ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}
       - REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}
-    command: npm run install:start
+    command: npm start

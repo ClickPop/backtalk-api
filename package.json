@@ -4,8 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "setup:start": "npm run setup && npm start",
-    "install:start": "npm install && npm start",
     "db:create": "sequelize-cli db:create",
     "db:drop": "sequelize-cli db:drop",
     "db:recreate": "sequelize-cli db:drop && sequelize-cli db:create",
@@ -17,7 +15,7 @@
     "migrate:fresh": "sequelize-cli db:migrate:undo:all && npm run migrate",
     "seed": "sequelize-cli db:seed:all",
     "seed:fresh": "sequelize-cli db:seed:undo:all && npm run seed",
-    "start": "nodemon server.js",
+    "dev": "nodemon server.js",
     "test": "jest --detectOpenHandles",
     "test:verbose": "jest --verbose",
     "test:open": "jest --detectOpenHandles",

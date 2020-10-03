@@ -22,4 +22,4 @@
     - `npm run setup:clean`
   - **HAVA A DATABASE AND WANT TO KEEP THE DATA INTACT** (will add new migrations)
     - `npm run setup:keep`
-- Start the server `npm start`
+- Start the server `npm run dev`
