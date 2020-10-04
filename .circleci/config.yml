@@ -78,4 +78,4 @@ jobs:
           command: ./transfer.sh
       - run:
           name: 'Execute deployment script on remote machine'
-          command: ssh circleci@api.backtalk.io < ./deploy.sh
+          command: ssh circleci@api.backtalk.io < CIRCLE_BRANCH=$CIRCLE_BRANCH ./deploy.sh
