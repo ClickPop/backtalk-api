@@ -1,7 +1,6 @@
-if [[ $CIRCLE_BRANCH -eq 'staging' ]]
-then
+if [[ $CIRCLE_BRANCH -eq 'staging' ]]; then
   cd backtalk-staging
-elif [[ $CIRCL_BRANCH -eq 'master' ]]
+elif [[ $CIRCL_BRANCH -eq 'master' ]]; then
   cd backtalk-api
 fi
 
