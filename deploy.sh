@@ -1,9 +1,9 @@
-if [[ $CIRCLE_BRANCH -eq 'staging' ]]; then
+if [[ $CIRCLE_BRANCH == 'staging' ]]; then
   cd backtalk-staging
-elif [[ $CIRCL_BRANCH -eq 'master' ]]; then
+elif [[ $CIRCL_BRANCH == 'master' ]]; then
   cd backtalk-api
 fi
 
 docker-compose down
 docker-compose up -d --build
-# rm .env
+rm .env
