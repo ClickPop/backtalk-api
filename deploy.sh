@@ -3,7 +3,7 @@ if [[ $CIRCLE_BRANCH == 'staging' ]]; then
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
   cd backtalk-api
 fi
-
+echo branch=$CIRCLE_BRANCH
 echo dir=$PWD
 docker-compose down
 docker-compose up -d --build
