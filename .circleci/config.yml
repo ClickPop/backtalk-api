@@ -67,12 +67,15 @@ jobs:
       - attach_workspace:
           at: ~/backtalk-api
       - add_ssh_keys
-      - run: |
-          echo 'Adding server to known_hosts.'
-          ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
-          echo 'Installing rscync to send files to remote server.'
-          sudo apt-get update && sudo apt-get install rsync
-          echo 'Setting up .env and transferring data to remote machine.'
-          ./transfer.sh
-          echo 'Executing deploy script on remote machine.'
-          ssh circleci@api.backtalk.io < ./deploy.sh
+      - run:
+          name: 'Add keys to known_hosts'
+          command: ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
+      - run:
+          name: 'Install rsync'
+          command: sudo apt-get update && sudo apt-get install rsync
+      - run:
+          name: 'Execute transfer script to setup .env and transfer files via rsync'
+          command: ./transfer.sh
+      - run:
+          name: 'Execute deployment script on remote machine'
+          command: ssh circleci@api.backtalk.io < ./deploy.sh

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Build out basic .env file
 echo -e "DB_USERNAME=$DB_USERNAME\n
 DB_PASSWORD=$DB_PASSWORD\n
