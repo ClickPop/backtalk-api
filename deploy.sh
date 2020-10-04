@@ -1,10 +1,7 @@
 #!/bin/bash
 if [[ $CIRCLE_BRANCH == 'staging' ]]; then
-  cd backtalk-staging
+  ssh circleci@api.backtalk.io < ./staging.sh
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
-  cd backtalk-api
+  ssh circleci@api.backtalk.io < ./master.sh
 fi
 
-docker-compose down
-docker-compose up -d --build
-rm .env
