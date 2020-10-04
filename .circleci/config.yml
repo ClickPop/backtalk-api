@@ -63,17 +63,17 @@ jobs:
           at: ~/backtalk-api
       - add_ssh_keys
       - run: |
-          echo DB_USERNAME=${DB_USERNAME} \
-          DB_PASSWORD=${DB_PASSWORD} \
-          DB_DATABASE=${DB_DATABASE} \
-          DB_HOST=backtalk-db \
-          HASH_SECRET=${HASH_SECRET} \
-          ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET} \
-          REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET} \
-          COOKIE_SECRET=${COOKIE_SECRET} \
-          ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION} \
-          REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION} \
-          NODE_ENV=production > .env
+          echo -e "DB_USERNAME=${DB_USERNAME}\n
+          DB_PASSWORD=${DB_PASSWORD}\n
+          DB_DATABASE=${DB_DATABASE}\n
+          DB_HOST=backtalk-db\n
+          HASH_SECRET=${HASH_SECRET}\n
+          ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}\n
+          REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}\n
+          COOKIE_SECRET=${COOKIE_SECRET}\n
+          ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}\n
+          REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}\n
+          NODE_ENV=production" > .env
           sudo apt-get update && sudo apt-get install rsync
           ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
           rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-api
