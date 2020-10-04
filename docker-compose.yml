@@ -1,13 +1,16 @@
-version: '3.1'
+version: '3.5'
 
 networks:
   app-network:
-
+    name: app-network
+    
 services:
   db:
     container_name: ${DB_NAME}
     image: postgres
     restart: always
+    networks: 
+      - app-network
     volumes:
       - ~${DB_LOCATION}:/var/lib/postgresql/data
     environment:
@@ -24,7 +27,9 @@ services:
       - db
     ports:
       - ${PORT}:${PORT}
-    volumes:
+    networks: 
+      - app-network
+      volumes:
       - ./:/var/app
     environment:
       - PORT=${PORT}
