@@ -1,9 +1,7 @@
 FROM node:14.11.0
 ARG NODE_ENV
-ARG PORT
 ENV NODE_ENV=$NODE_ENV
 RUN echo "NODE_ENV $NODE_ENV"
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install
-EXPOSE $PORT

@@ -1,12 +1,53 @@
 version: '3.1'
 
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: ~/static
+      o: bind
+
 services:
+  server:
+    image: nginx:mainline-alpine
+    container_name: ${API_NAME}-server
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - web-root:/var/www/html
+      - ~/nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - api
+    networks:
+      - app-network
+  certbot:
+    image: certbot/certbot
+    container_name: ${API_NAME}-certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - server
+    command: certonly --webroot --webroot-path=/var/www/html --email graham@clickpopmedia.com --agree-tos --no-eff-email --staging -d api.backtalk.io  -d staging.backtalk.io
   db:
     container_name: ${DB_NAME}
     image: postgres
     restart: always
     volumes:
-      - ${DB_LOCATION}:/var/lib/postgresql/data
+      - ~${DB_LOCATION}:/var/lib/postgresql/data
+    networks:
+      - app-network
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   api:
@@ -15,14 +56,13 @@ services:
       context: .
       args:
         NODE_ENV: ${NODE_ENV}
-        PORT: ${PORT}
     restart: on-failure
     depends_on:
       - db
-    ports:
-      - ${PORT}:${PORT}
     volumes:
       - ./:/var/app
+    networks:
+      - app-network
     environment:
       - PORT=${PORT}
       - NODE_ENV=${NODE_ENV}

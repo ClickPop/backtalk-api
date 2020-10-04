@@ -17,7 +17,7 @@ DB_HOST=backtalk-db-staging\n
 NODE_ENV=production\n
 API_NAME=backtalk-api-staging\n
 DB_NAME=backtalk-db-staging\n
-DB_LOCATION=../data-staging" >> .env
+DB_LOCATION=/data-staging" >> .env
   
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-staging
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
@@ -26,7 +26,7 @@ DB_HOST=backtalk-db\n
 NODE_ENV=production\n
 API_NAME=backtalk-api\n
 DB_NAME=backtalk-db\n
-DB_LOCATION=../data" >> .env
+DB_LOCATION=/data" >> .env
   
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-api
 fi
