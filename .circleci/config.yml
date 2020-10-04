@@ -77,8 +77,7 @@ jobs:
           REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}\n
           COOKIE_SECRET=${COOKIE_SECRET}\n
           ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}\n
-          REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}\n
-          NODE_ENV=production" > .env
+          REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}" > .env
           sudo apt-get update && sudo apt-get install rsync
           ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
           ./transfer.sh

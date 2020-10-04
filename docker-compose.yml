@@ -2,15 +2,15 @@ version: '3.1'
 
 services:
   db:
-    container_name: backtalk-db
+    container_name: ${DB_NAME}
     image: postgres
     restart: always
     volumes:
-      - ../data:/var/lib/postgresql/data
+      - ${DB_LOCATION}:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   api:
-    container_name: backtalk-api
+    container_name: ${API_NAME}
     build:
       context: .
       args:
@@ -23,6 +23,7 @@ services:
     volumes:
       - ./:/var/app
     environment:
+      - PORT=${PORT}
       - NODE_ENV=${NODE_ENV}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
