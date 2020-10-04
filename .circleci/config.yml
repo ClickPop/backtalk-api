@@ -68,6 +68,7 @@ jobs:
           at: ~/backtalk-api
       - add_ssh_keys
       - run: |
+          echo 'Setting up initial .env'
           echo -e "DB_USERNAME=${DB_USERNAME}\n
           DB_PASSWORD=${DB_PASSWORD}\n
           DB_DATABASE=${DB_DATABASE}\n
@@ -78,7 +79,11 @@ jobs:
           COOKIE_SECRET=${COOKIE_SECRET}\n
           ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}\n
           REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}" > .env
+          echo 'Installing rscync to send files to remote server.'
           sudo apt-get update && sudo apt-get install rsync
+          echo 'Adding server to known_hosts.'
           ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
+          echo 'Transferring Data.'
           ./transfer.sh
-          ssh circleci@api.backtalk.io \< ./deploy.sh
+          ls
+          ssh circleci@api.backtalk.io < ./deploy.sh
