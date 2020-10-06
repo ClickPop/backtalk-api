@@ -1,5 +1,13 @@
 [![CircleCI](https://img.shields.io/circleci/build/gh/ClickPop/backtalk-api?label=Tests&style=for-the-badge)](https://circleci.com/gh/ClickPop/backtalk-api)
 
+## A Word about Contributing
+
+> **Note:** We will not accept any PR's that don't follow our Guidelines
+
+This project now utilizes GIT-Flow. Before making your first commit, please read about the workflow here.
+
+Internally, we use HubFlow as a CLI tool to help manage our Git-Flow feature, release, and hotfix branches. While not necessary, it is highly recommended that you utilize a similar CLI tool, to help enfore the guidelines we've outlined in the [Backtalk Contributing Guidelines](CONTRIBUTING.md).
+
 ## Installation
 
 ### Prerequesites
