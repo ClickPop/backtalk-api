@@ -10,8 +10,8 @@ COOKIE_SECRET=$COOKIE_SECRET\n
 ACCESS_TOKEN_EXPIRATION=$ACCESS_TOKEN_EXPIRATION\n
 REFRESH_TOKEN_EXPIRATION=$REFRESH_TOKEN_EXPIRATION\n" > .env
 
-# Handle whether we are on the staging or master branch
-if [[ $CIRCLE_BRANCH == 'staging' ]]; then
+# Handle whether we are on the develop or master branch
+if [[ $CIRCLE_BRANCH == 'develop' ]]; then
   echo -e "PORT=5001\n
 DB_HOST=backtalk-db-staging\n
 NODE_ENV=production\n

@@ -1,4 +1,4 @@
-const { sequelize } = require('./models');
+const { sequelize } = require('../models');
 
 afterAll(async (done) => {
   sequelize.close().then(done());
