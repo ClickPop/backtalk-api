@@ -75,7 +75,7 @@ jobs:
           command: sudo apt-get update && sudo apt-get install rsync
       - run:
           name: 'Execute transfer script to setup .env and transfer files via rsync'
-          command: ./transfer.sh
+          command: ./scripts/transfer.sh
       - run:
           name: 'Execute deployment script on remote machine'
-          command: ./deploy.sh
+          command: ./scripts/deploy.sh
