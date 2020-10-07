@@ -1,7 +1,7 @@
 {
-  "name": "survey-app-server",
-  "version": "1.0.0",
-  "description": "",
+  "name": "backtalk-api",
+  "version": "0.1.0-alpha1",
+  "description": "API Service for backtalk.io",
   "main": "server.js",
   "scripts": {
     "db:create": "sequelize-cli db:create",
@@ -25,8 +25,20 @@
     "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*"
   },
   "keywords": [],
-  "author": "",
+  "author": "ClickPopMedia",
+  "contributors": [
+    {
+      "name": "Sean Metzgar"
+    },
+    {
+      "name": "Graham Vasquez"
+    },
+    {
+      "name": "Chris Vasquez"
+    }
+  ],
   "license": "ISC",
+  "repository": "clickpop/backtalk-api",
   "devDependencies": {
     "@types/jest": "^26.0.13",
     "babel-eslint": "^10.1.0",
