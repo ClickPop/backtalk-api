@@ -39,7 +39,7 @@ router.post('/', async (req, res, next) => {
       });
     }
   }
-  return res.status(201).json(data);
+  return res.status(201).json({ results: data });
 });
 
 module.exports = router;
