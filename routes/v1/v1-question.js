@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const { Survey } = require('../../models');
+const { Survey, Question } = require('../../models');
 
 router.post('/', async (req, res, next) => {
   const { questions } = req.body;
@@ -13,6 +13,7 @@ router.post('/', async (req, res, next) => {
         where: {
           id: surveyId,
         },
+        include: [Question],
       });
       if (!survey) {
         return next({
@@ -25,8 +26,15 @@ router.post('/', async (req, res, next) => {
           ],
         });
       }
-      const newQuestion = await survey.createQuestion(question);
-      data.push({ surveyId: survey.id, question: newQuestion });
+      const exists = survey
+        .toJSON()
+        .Questions.find((item) => item.prompt === question.prompt);
+      if (!exists) {
+        const newQuestion = await survey.createQuestion(question);
+        data.push({ surveyId: survey.id, question: newQuestion });
+      } else {
+        data.push({ surveyId: survey.id, question: exists });
+      }
     } catch (err) {
       return next({
         status: 500,
