@@ -3,24 +3,30 @@ const app = require('../app');
 const req = supertest.agent(app);
 const commonInfo = require('./commonData');
 const hashIds = require('../helpers/hashIds');
+const uaString =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
 
 describe('Responses', () => {
   beforeAll(async (done) => {
-    await req.post('/api/v1/users/register').send({
+    await req.post('/api/v1/users/register').set('User-Agent', uaString).send({
       email: 'test2@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
 
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'test2@test.com',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/auth/login')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test2@test.com',
+        password: 'Test1234!',
+      });
     commonInfo.accessToken = res.body.accessToken;
 
     const survey = await req
       .post('/api/v1/surveys/new')
       .set('Authorization', `Bearer ${res.body.accessToken}`)
+      .set('User-Agent', uaString)
       .send({
         title: 'Test Title',
         description: 'This is a test description',
@@ -44,7 +50,8 @@ describe('Responses', () => {
   afterAll(async (done) => {
     await req
       .delete('/api/v1/users/delete')
-      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+      .set('User-Agent', uaString);
     done();
   });
 
@@ -57,9 +64,12 @@ describe('Responses', () => {
           questionId: question.id,
         }),
       );
-      const res = await req.post('/api/v1/responses/new').send({
-        responses,
-      });
+      const res = await req
+        .post('/api/v1/responses/new')
+        .set('User-Agent', uaString)
+        .send({
+          responses,
+        });
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('results');
       expect(res.body.results).toBeDefined();
@@ -77,7 +87,8 @@ describe('Responses', () => {
             commonInfo.firstSurvey.result.id,
           )}`,
         )
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.body).toHaveProperty('results');
       expect(Array.isArray(res.body.results)).toBeTruthy();
       expect(res.body.results.length).toBeGreaterThan(0);
@@ -87,7 +98,8 @@ describe('Responses', () => {
     it('should respond with a 404 if the survey does not exist', async (done) => {
       const res = await req
         .get(`/api/v1/responses/doesNotExist`)
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(404);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([
@@ -101,9 +113,9 @@ describe('Responses', () => {
     });
 
     it('should respond with a 401 if the user is not logged in.', async (done) => {
-      const res = await req.get(
-        `/api/v1/responses/${commonInfo.firstSurvey.id}`,
-      );
+      const res = await req
+        .get(`/api/v1/responses/${commonInfo.firstSurvey.id}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(401);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([
@@ -121,6 +133,7 @@ describe('Responses', () => {
       const res = await req
         .delete('/api/v1/responses/delete')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString)
         .send({ responseId: commonInfo.firstResponse.id });
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -132,6 +145,7 @@ describe('Responses', () => {
     it('should respond with a 401 if the user is not logged in.', async (done) => {
       const res = await req
         .delete('/api/v1/responses/delete')
+        .set('User-Agent', uaString)
         .send({ surveyId: 0 });
       expect(res.status).toBe(401);
       expect(res.body.errors).toEqual(

@@ -2,6 +2,8 @@ const commonInfo = require('./commonData');
 const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
+const uaString =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
 
 describe('Registration', () => {
   afterAll(async (done) => {
@@ -9,11 +11,14 @@ describe('Registration', () => {
   });
 
   it('should respond with a 422 and an error message', async (done) => {
-    const res = await req.post('/api/v1/users/register').send({
-      email: 'test@test.com',
-      name: 'Test User',
-      password: 't',
-    });
+    const res = await req
+      .post('/api/v1/users/register')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test@test.com',
+        name: 'Test User',
+        password: 't',
+      });
     expect(res.status).toBe(422);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
@@ -47,11 +52,14 @@ describe('Registration', () => {
   });
 
   it('should respond with a 201 and authenticated message', async (done) => {
-    const res = await req.post('/api/v1/users/register').send({
-      email: 'test@test.com',
-      name: 'Test User',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/users/register')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test@test.com',
+        name: 'Test User',
+        password: 'Test1234!',
+      });
     expect(res.status).toBe(201);
     expect(res.body).toEqual({
       registered: true,
@@ -61,11 +69,14 @@ describe('Registration', () => {
   });
 
   it('should respond with a 409 and an error if user already exists', async (done) => {
-    const res = await req.post('/api/v1/users/register').send({
-      email: 'test@test.com',
-      name: 'Test User',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/users/register')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test@test.com',
+        name: 'Test User',
+        password: 'Test1234!',
+      });
     expect(res.status).toBe(409);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
@@ -82,10 +93,13 @@ describe('Registration', () => {
 
 describe('Login', () => {
   it('should respond with a 401 and an error if the email is incorrect', async (done) => {
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'notTest@test.com',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/auth/login')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'notTest@test.com',
+        password: 'Test1234!',
+      });
     expect(res.status).toBe(401);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
@@ -99,10 +113,13 @@ describe('Login', () => {
   });
 
   it('should respond with a 401 and an error if the password is incorrect', async (done) => {
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'test@test.com',
-      password: 'notTest1234!',
-    });
+    const res = await req
+      .post('/api/v1/auth/login')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test@test.com',
+        password: 'notTest1234!',
+      });
     expect(res.status).toBe(401);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
@@ -116,10 +133,13 @@ describe('Login', () => {
   });
 
   it('should respond with a 200 and the access token in the body and refresh token in a cookie', async (done) => {
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'test@test.com',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/auth/login')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test@test.com',
+        password: 'Test1234!',
+      });
     expect(res.status).toBe(200);
     expect(res.body.accessToken).toBeDefined();
     expect(res.header['set-cookie'][0]).toMatch(/jrt/);
@@ -129,7 +149,9 @@ describe('Login', () => {
 
 describe('Refresh Token', () => {
   it('should respond with a 200 and an updated access/refresh token when given a valid refresh token', async (done) => {
-    const res = await req.post('/api/v1/auth/refresh_token');
+    const res = await req
+      .post('/api/v1/auth/refresh_token')
+      .set('User-Agent', uaString);
     expect(res.body.accessToken).toBeDefined();
     expect(res.header['set-cookie'][0]).toMatch(/jrt/);
     commonInfo.accessToken = res.body.accessToken;
@@ -141,7 +163,8 @@ describe('Delete user', () => {
   it('should respond with a 200 if the user is deleted.', async (done) => {
     const res = await req
       .delete('/api/v1/users/delete')
-      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+      .set('User-Agent', uaString);
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       deleted: true,
@@ -150,7 +173,9 @@ describe('Delete user', () => {
   });
 
   it('should respond with a 401 if the user is not logged in.', async (done) => {
-    const res = await req.delete('/api/v1/users/delete');
+    const res = await req
+      .delete('/api/v1/users/delete')
+      .set('User-Agent', uaString);
     expect(res.status).toBe(401);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
