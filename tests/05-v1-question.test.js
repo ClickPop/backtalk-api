@@ -56,11 +56,17 @@ describe('Question', () => {
           questions: [
             {
               surveyId: commonInfo.firstSurvey.result.id,
-              question: { prompt: 'This is question 1 prompt', type: 'text' },
+              question: {
+                prompt: 'This is question 1 prompt again',
+                type: 'text',
+              },
             },
             {
               surveyId: commonInfo.firstSurvey.result.id,
-              question: { prompt: 'This is question 2 prompt', type: 'text' },
+              question: {
+                prompt: 'This is question 2 prompt again',
+                type: 'text',
+              },
             },
           ],
         });
