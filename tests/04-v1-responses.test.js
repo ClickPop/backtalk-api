@@ -87,7 +87,8 @@ describe('Responses', () => {
             commonInfo.firstSurvey.result.id,
           )}`,
         )
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.body).toHaveProperty('results');
       expect(Array.isArray(res.body.results)).toBeTruthy();
       expect(res.body.results.length).toBeGreaterThan(0);
@@ -97,7 +98,8 @@ describe('Responses', () => {
     it('should respond with a 404 if the survey does not exist', async (done) => {
       const res = await req
         .get(`/api/v1/responses/doesNotExist`)
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(404);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([

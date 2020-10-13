@@ -68,6 +68,7 @@ describe('Surveys', () => {
       await req
         .post('/api/v1/surveys/new')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString)
         .send({
           title: 'Test Title 2',
           description: 'This is a test description',
@@ -123,7 +124,8 @@ describe('Surveys', () => {
     it('should respond with a 200 and all the surveys for a given user with a max of 20.', async (done) => {
       const res = await req
         .get('/api/v1/surveys')
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(200);
       expect(res.body.results).toBeDefined();
       expect(Array.isArray(res.body.results)).toBeTruthy();
@@ -134,7 +136,8 @@ describe('Surveys', () => {
     it('should respond with a subset of surveys with the count query parameter', async (done) => {
       const res = await req
         .get('/api/v1/surveys?count=1')
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.body.results).toBeDefined();
       expect(Array.isArray(res.body.results)).toBeTruthy();
       expect(res.body.results).toHaveLength(1);
@@ -145,7 +148,8 @@ describe('Surveys', () => {
     it('should respond with a subset of surveys with the count and skip some using the offset query parameters', async (done) => {
       const res = await req
         .get('/api/v1/surveys?count=1&offset=1')
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.body.results).toBeDefined();
       expect(Array.isArray(res.body.results)).toBeTruthy();
       expect(res.body.results).toHaveLength(1);
@@ -171,7 +175,8 @@ describe('Surveys', () => {
     it('should respond with a 200 and a specific survey', async (done) => {
       const res = await req
         .get(`/api/v1/surveys/${hashIds.encode(commonInfo.firstSurvey.id)}`)
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(200);
       expect(res.body.result.title).toBe('Test Title');
       expect(res.body.result.description).toBe('This is a test description');
@@ -187,7 +192,8 @@ describe('Surveys', () => {
     it("should respond with a 404 and an error if the survey doesn't exist", async (done) => {
       const res = await req
         .get(`/api/v1/surveys/doesNotExist`)
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(404);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([
@@ -206,6 +212,7 @@ describe('Surveys', () => {
       const res = await req
         .delete('/api/v1/surveys/delete')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString)
         .send({ surveyId: commonInfo.firstSurvey.id });
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -217,6 +224,7 @@ describe('Surveys', () => {
     it('should respond with a 401 if the user is not logged in.', async (done) => {
       const res = await req
         .delete('/api/v1/surveys/delete')
+        .set('User-Agent', uaString)
         .send({ surveyId: commonInfo.firstSurvey.id });
       expect(res.status).toBe(401);
       expect(res.body.errors).toEqual(

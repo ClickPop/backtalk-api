@@ -11,7 +11,8 @@ describe('Registration', () => {
   });
 
   it('should respond with a 422 and an error message', async (done) => {
-    const res = await (await req.post('/api/v1/users/register'))
+    const res = await req
+      .post('/api/v1/users/register')
       .set('User-Agent', uaString)
       .send({
         email: 'test@test.com',
