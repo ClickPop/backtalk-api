@@ -1,4 +1,5 @@
-[![CircleCI](https://img.shields.io/circleci/build/gh/ClickPop/backtalk-api?label=Tests&style=for-the-badge)](https://circleci.com/gh/ClickPop/backtalk-api)
+[![Tests](https://img.shields.io/circleci/build/gh/ClickPop/backtalk-api?label=Tests&style=for-the-badge)](https://circleci.com/gh/ClickPop/backtalk-api) ![Coverage](https://img.shields.io/coveralls/github/ClickPop/backtalk-api?style=for-the-badge)
+
 # Backtalk API
 
 ## Prerequesites
@@ -11,23 +12,24 @@
 ## Instructions
 
 1. Clone this repository
-`git clone https://github.com/clickpop/backtalk-api.git`
+   `git clone https://github.com/clickpop/backtalk-api.git`
 2. Enter repository
-`cd backtalk-api`
+   `cd backtalk-api`
 3. Make sure Postgres is installed / running
 4. Update `.env` file with appropriate Postgres settings
 5. Setup the project using one of the following:
-    - **DON'T HAVE THE DATABASE YET** (you'll still need Postgres running)
-    `npm run setup`
 
-    - **HAVE A DATABASE AND WANT TO WIPE IT OUT**:
-    `npm run setup:clean`
+   - **DON'T HAVE THE DATABASE YET** (you'll still need Postgres running)
+     `npm run setup`
 
-    - **HAVA A DATABASE AND WANT TO KEEP THE DATA INTACT** (will add new migrations)
-    `npm run setup:keep`
+   - **HAVE A DATABASE AND WANT TO WIPE IT OUT**:
+     `npm run setup:clean`
+
+   - **HAVA A DATABASE AND WANT TO KEEP THE DATA INTACT** (will add new migrations)
+     `npm run setup:keep`
 
 6. Start the server
-`npm run dev`
+   `npm run dev`
 
 ## A Word about Contributing
 

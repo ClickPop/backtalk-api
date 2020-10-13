@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
+
 workflows:
   version: 2
   test:
@@ -13,6 +16,7 @@ workflows:
               only:
                 - master
                 - staging
+
 jobs:
   test:
     working_directory: ~/backtalk-api
@@ -26,7 +30,7 @@ jobs:
       - checkout
       - run:
           name: Update NPM
-          command: 'sudo npm install -g npm'
+          command: "sudo npm install -g npm"
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -39,14 +43,11 @@ jobs:
       - run:
           name: Test Suite
           command: npm test
-      - store_artifacts:
-          path: reports/jest
-          prefix: jest
-      - store_artifacts:
-          path: reports/coverage
-          prefix: coverage
       - store_test_results:
           path: reports
+      - coveralls/upload:
+          path_to_lcov: ./reports/coverage/lcov.info
+
     environment:
       DB_TEST_USERNAME: postgres
       DB_TEST_PASSWORD: secret
@@ -68,14 +69,14 @@ jobs:
           at: ~/backtalk-api
       - add_ssh_keys
       - run:
-          name: 'Add keys to known_hosts'
+          name: "Add keys to known_hosts"
           command: ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
       - run:
-          name: 'Install rsync'
+          name: "Install rsync"
           command: sudo apt-get update && sudo apt-get install rsync
       - run:
-          name: 'Execute transfer script to setup .env and transfer files via rsync'
+          name: "Execute transfer script to setup .env and transfer files via rsync"
           command: ./scripts/transfer.sh
       - run:
-          name: 'Execute deployment script on remote machine'
+          name: "Execute deployment script on remote machine"
           command: ./scripts/deploy.sh
