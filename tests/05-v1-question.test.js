@@ -2,24 +2,30 @@ const commonInfo = require('./commonData');
 const supertest = require('supertest');
 const app = require('../app');
 const req = supertest.agent(app);
+const uaString =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
 
 describe('Question', () => {
   beforeAll(async (done) => {
-    await req.post('/api/v1/users/register').send({
+    await req.post('/api/v1/users/register').set('User-Agent', uaString).send({
       email: 'test1@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
 
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'test1@test.com',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/auth/login')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test1@test.com',
+        password: 'Test1234!',
+      });
     commonInfo.accessToken = res.body.accessToken;
 
     const survey = await req
       .post('/api/v1/surveys/new')
       .set('Authorization', `Bearer ${res.body.accessToken}`)
+      .set('User-Agent', uaString)
       .send({
         title: 'Test Title',
         description: 'This is a test description',
@@ -43,7 +49,8 @@ describe('Question', () => {
   afterAll(async (done) => {
     await req
       .delete('/api/v1/users/delete')
-      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+      .set('User-Agent', uaString);
     done();
   });
 
@@ -52,6 +59,7 @@ describe('Question', () => {
       const res = await req
         .post('/api/v1/question')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString)
         .send({
           questions: [
             {
