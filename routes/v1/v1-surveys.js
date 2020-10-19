@@ -77,9 +77,15 @@ router.get('/', authenticate, async (req, res, next) => {
         Session,
       ],
     });
-    let results = surveys.map((survey) =>
-      survey.toJSON().renameProperty('Questions', 'questions'),
-    );
+    let results = surveys.map((survey) => {
+      let result = survey
+        .toJSON()
+        .renameProperty('Questions', 'questions')
+        .renameProperty('id', 'hash');
+      result.hash = hashIds.encode(result.hash);
+
+      return result;
+    });
     res.status(200).json({
       results,
     });
