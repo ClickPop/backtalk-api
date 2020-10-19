@@ -174,7 +174,7 @@ describe('Surveys', () => {
   describe('Get Specific Survey', () => {
     it('should respond with a 200 and a specific survey', async (done) => {
       const res = await req
-        .get(`/api/v1/surveys/${hashIds.encode(commonInfo.firstSurvey.id)}`)
+        .get(`/api/v1/surveys/${commonInfo.firstSurvey.hash}`)
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
         .set('User-Agent', uaString);
       expect(res.status).toBe(200);
@@ -213,7 +213,7 @@ describe('Surveys', () => {
         .delete('/api/v1/surveys/delete')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
         .set('User-Agent', uaString)
-        .send({ surveyId: commonInfo.firstSurvey.id });
+        .send({ surveyId: hashIds.decode(commonInfo.firstSurvey.hash) });
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
         deleted: true,
