@@ -77,9 +77,13 @@ router.get('/', authenticate, async (req, res, next) => {
         Session,
       ],
     });
-    let results = surveys.map((survey) =>
-      survey.toJSON().renameProperty('Questions', 'questions'),
-    );
+    let results = [];
+    for (let i = 0; i < surveys.length; i++) {
+      results.push({
+        ...surveys[i].toJSON().renameProperty('Questions', 'questions'),
+        hash: await hashIds.encode(surveys[i].id),
+      });
+    }
     res.status(200).json({
       results,
     });
