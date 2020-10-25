@@ -7,7 +7,7 @@ const {
   checkTitle,
   checkSurveyQuestions,
 } = require('../../middleware/validate');
-const { Survey, Question, Session, User } = require('../../models');
+const { Survey, Question, User } = require('../../models');
 const hashIds = require('../../helpers/hashIds');
 
 router.get('/getHash', async (req, res) => {
@@ -74,7 +74,6 @@ router.get('/', authenticate, async (req, res, next) => {
           attributes: ['id', 'email', 'name'],
         },
         Question,
-        Session,
       ],
     });
     let results = [];
@@ -118,7 +117,7 @@ router.get('/:hash', async (req, res, next) => {
       where: {
         id,
       },
-      include: [Question, Session],
+      include: [Question],
     });
     let result = survey.toJSON().renameProperty('Questions', 'questions');
     result = { ...result };

@@ -9,12 +9,12 @@ const restrictAccess = require('./middleware/restrictAccess');
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 
-// Restrict Access: Disallow Robots/Crawlers
-app.use(restrictAccess);
-
+// Restrict Access: Disallow Robots/Crawlers if in production
 // Enable Morgan logger on anything except production for testing
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
+} else {
+  app.use(restrictAccess);
 }
 
 // Default Route
@@ -33,7 +33,7 @@ app.all('*', (req, res) => {
 
 // Error Handler
 app.use((err, _req, res) => {
-  if (err.stack) console.error(err.stack);
+  console.error(err.stack);
   return res.status(err.status).json({ errors: err.errors });
 });
 

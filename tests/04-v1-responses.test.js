@@ -60,21 +60,23 @@ describe('Responses', () => {
       const responses = commonInfo.firstSurvey.result.questions.map(
         (question, i) => ({
           value: `Response to question ${i + 1}`,
-          respondent: 'Greg',
-          questionId: question.id,
+          id: question.id,
+          type: 'text',
         }),
       );
       const res = await req
         .post('/api/v1/responses/new')
         .set('User-Agent', uaString)
         .send({
+          surveyId: commonInfo.firstSurvey.result.id,
           responses,
+          respondent: 'Greg',
         });
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('results');
-      expect(res.body.results).toBeDefined();
-      expect(Array.isArray(res.body.results)).toBeTruthy();
-      commonInfo.firstResponse = res.body.results[0];
+      expect(res.body).toHaveProperty('result');
+      expect(res.body.result).toBeDefined();
+      expect(Array.isArray(res.body.result.data)).toBe(true);
+      commonInfo.firstResponse = res.body.result;
       done();
     });
   });
@@ -90,7 +92,7 @@ describe('Responses', () => {
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
         .set('User-Agent', uaString);
       expect(res.body).toHaveProperty('results');
-      expect(Array.isArray(res.body.results)).toBeTruthy();
+      expect(Array.isArray(res.body.results)).toBe(true);
       expect(res.body.results.length).toBeGreaterThan(0);
       done();
     });
