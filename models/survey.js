@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       through: 'SurveyQuestions',
       onDelete: 'CASCADE',
     });
-    Survey.hasMany(models.Session);
+    Survey.hasMany(models.Response);
   };
   return Survey;
 };

@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Response.init(
     {
-      value: DataTypes.STRING,
+      data: DataTypes.JSONB,
+      userAgent: DataTypes.STRING,
+      ipAddress: DataTypes.INET,
+      respondent: DataTypes.STRING,
     },
     {
       sequelize,
@@ -14,9 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Response.associate = function (models) {
-    Response.belongsTo(models.Question);
-
-    Response.belongsTo(models.Session);
+    Response.belongsTo(models.Survey);
   };
 
   return Response;

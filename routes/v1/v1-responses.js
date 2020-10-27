@@ -1,23 +1,23 @@
 require('dotenv').config();
 const express = require('express');
 const authenticate = require('../../middleware/authenticate');
-const { Response, Survey, Question } = require('../../models');
+const { Response, Survey } = require('../../models');
 const router = express.Router();
 const hashIds = require('../../helpers/hashIds');
 
 router.post('/new', async (req, res, next) => {
   try {
-    const { responses } = req.body;
-    responses.forEach((response) => {
-      response.renameProperty('questionId', 'QuestionId');
-    });
-    const data = await Response.bulkCreate(responses);
-    data.forEach((response) => {
-      response.renameProperty('questionId', 'QuestionId');
+    const { surveyId, responses, respondent } = req.body;
+    const data = await Response.create({
+      SurveyId: surveyId,
+      data: responses,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+      respondent,
     });
     res.status(200).json({
       created: true,
-      results: data,
+      result: data,
     });
   } catch (err) {
     console.error(err);
@@ -49,14 +49,9 @@ router.get('/:surveyId', authenticate, async (req, res, next) => {
     }
     const survey = await Survey.findOne({
       where: { id: id },
-      include: [Question],
+      include: [Response],
     });
-    const questions = survey.Questions;
-    const responses = [];
-    for (const question of questions) {
-      const resps = await question.getResponses();
-      resps.forEach((resp) => responses.push(resp.toJSON()));
-    }
+    const responses = survey.Responses;
     res.status(200).json({
       results: responses,
     });
@@ -84,6 +79,22 @@ router.delete('/delete', authenticate, async (req, res, next) => {
           {
             msg: 'Not Found',
             location: 'url',
+          },
+        ],
+      });
+    }
+    const survey = await Survey.findOne({
+      where: {
+        UserId: req.user.id,
+      },
+      include: [{ model: Response, where: { id: id } }],
+    });
+    if (!survey) {
+      return next({
+        status: 401,
+        errors: [
+          {
+            msg: 'Unauthorized',
           },
         ],
       });

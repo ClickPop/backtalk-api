@@ -18,9 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
   Question.associate = function (models) {
-    Question.hasMany(models.Response, {
-      as: 'responses',
-    });
     Question.belongsToMany(models.Survey, {
       through: 'SurveyQuestions',
       onDelete: 'CASCADE',
