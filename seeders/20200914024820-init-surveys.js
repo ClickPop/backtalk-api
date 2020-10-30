@@ -10,6 +10,7 @@ module.exports = {
       let survey = await Survey.create({
         title: `Random Survey ${i}`,
         description: loremIpsum(),
+        respondent: true,
         createdAt: new Date().toUTCString(),
         updatedAt: new Date().toUTCString(),
       });

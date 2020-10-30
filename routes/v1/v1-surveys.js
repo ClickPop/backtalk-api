@@ -28,6 +28,7 @@ router.post(
         description: req.body.description || null,
         Questions: req.body.questions,
         UserId: req.user.id,
+        respondent: req.body.respondent,
       };
       const survey = await Survey.create(
         {

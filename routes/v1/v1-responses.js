@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const authenticate = require('../../middleware/authenticate');
-const { Response, Survey } = require('../../models');
+const { Response, Survey, Question } = require('../../models');
 const router = express.Router();
 const hashIds = require('../../helpers/hashIds');
 
@@ -48,12 +48,14 @@ router.get('/:surveyId', authenticate, async (req, res, next) => {
       });
     }
     const survey = await Survey.findOne({
-      where: { id: id },
-      include: [Response],
+      where: { id: id, UserId: req.user.id },
+      include: [Response, Question],
     });
     const responses = survey.Responses;
+    const questions = survey.Questions;
     res.status(200).json({
       results: responses,
+      questions,
     });
   } catch (err) {
     console.error(err);

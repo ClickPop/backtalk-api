@@ -44,7 +44,8 @@ module.exports = {
             switch (current_question.type) {
               case 'text':
               default:
-                current_answer.value = faker.lorem.words();
+                current_answer.value =
+                  Math.ceil(Math.random() * 100) % 2 === 0 ? 'Back' : 'Talk';
                 current_answer.id = current_question.id;
                 break;
             }
