@@ -1,5 +1,5 @@
 const supertest = require('supertest');
-const app = require('../app');
+const app = require('../server/app');
 const req = supertest.agent(app);
 const commonInfo = require('./commonData');
 const hashIds = require('../helpers/hashIds');
