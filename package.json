@@ -23,7 +23,9 @@
     "test:watch": "jest --watch",
     "lint": "eslint --cache --fix",
     "lint:ci": "eslint --format jslint-xml",
-    "prettier": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*"
+    "format": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*",
+    "docker-up": "node scripts/docker-up.js",
+    "docker-down": "node scripts/docker-down.js"
   },
   "keywords": [],
   "author": "ClickPopMedia",
