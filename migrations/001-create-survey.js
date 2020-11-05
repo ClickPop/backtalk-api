@@ -14,6 +14,10 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
+      respondent: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       UserId: {
         type: Sequelize.BIGINT,
         defaultValue: null,

@@ -1,10 +1,10 @@
 require('dotenv').config();
-require('./helpers/prototypes');
+require('../helpers/prototypes');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const restrictAccess = require('./middleware/restrictAccess');
+const restrictAccess = require('../middleware/restrictAccess');
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 // API (v1) Routes Loader
-app.use('/api/v1', require('./routes/v1/v1-index'));
+app.use('/api/v1', require('../routes/v1/v1-index'));
 
 app.all('*', (req, res) => {
   return res.status(404).json({

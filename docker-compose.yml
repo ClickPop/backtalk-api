@@ -13,6 +13,8 @@ services:
       - app-network
     volumes:
       - ~${DB_LOCATION}:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:${DB_PORT}
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   api:
@@ -30,7 +32,8 @@ services:
     networks:
       - app-network
     volumes:
-      - ./:/var/app
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
       - PORT=${PORT}
       - NODE_ENV=${NODE_ENV:-development}
@@ -44,4 +47,4 @@ services:
       - COOKIE_SECRET=${COOKIE_SECRET}
       - ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}
       - REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}
-    command: npm start
+    command: ${NODE_COMMAND}

@@ -1,6 +1,6 @@
 const commonInfo = require('./commonData');
 const supertest = require('supertest');
-const app = require('../app');
+const app = require('../server/app');
 const req = supertest.agent(app);
 const uaString =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
