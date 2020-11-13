@@ -38,11 +38,11 @@ router.post(
           include: Question,
         },
       );
-
       let result = survey.toJSON().renameProperty('Questions', 'questions');
+      const hash = await hashIds.encode(result.id);
       return res.status(200).json({
         created: true,
-        result,
+        result: { ...result, hash },
       });
     } catch (err) {
       next({
