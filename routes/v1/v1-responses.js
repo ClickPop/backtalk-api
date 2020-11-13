@@ -33,6 +33,36 @@ router.post('/new', async (req, res, next) => {
   }
 });
 
+router.patch('/update', async (req, res, next) => {
+  try {
+    const { responseId, responses, respondent } = req.body;
+
+    await Response.update(
+      {
+        data: responses,
+        respondent,
+      },
+      { where: { id: responseId } },
+    );
+    const data = await Response.findOne({ where: { id: responseId } });
+    res.status(200).json({
+      updated: true,
+      result: data,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
 router.get('/:surveyId', authenticate, async (req, res, next) => {
   try {
     const id = await hashIds.decode(req.params.surveyId)[0];
