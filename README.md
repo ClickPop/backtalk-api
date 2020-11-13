@@ -54,14 +54,14 @@
 - `npm format` - Runs the code formatter in-case your IDE doesn't have built in Prettier support
 - `npm run docker-up` - Runs this docker-compose up command for the backend
 - `npm run docker-down` - Runs this docker-compose down command for the backend
-
-_If the COMBINED env variable is set to 'true' it will also start the frontend, see more in the "A Note on Docker" section below_
+- `npm run docker-up:combined` - Runs this docker-compose up command for the backend and frontend _See A Note on Docker section below_
+- `npm run docker-down:combined` - Runs this docker-compose down command for the backend and frontend _See A Note on Docker section below_
 
 ## A note on docker
 
 Feel free to use the docker npm scripts we have setup. Just be sure that all of the stuff labeled under the Database and Docker sections of the .env are filled in with the correct information.
 
-If you want this to also handle the frontend you just need to clone the [backtalk-ui](https://github.com/clickpop/backtalk-ui/) repo into a folder called 'client'. The `npm run docker-up` command will handle the rest.
+If you want this to also handle the frontend you just need to clone the [backtalk-ui](https://github.com/clickpop/backtalk-ui/) repo into a folder called 'client'. The `npm run docker-up:combined` command will handle the rest.
 
 If you need help with this, please feel free to reach out.
 

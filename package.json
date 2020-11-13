@@ -24,8 +24,10 @@
     "lint": "eslint --cache --fix",
     "lint:ci": "eslint --format jslint-xml",
     "format": "prettier --write *.{js,json,md,scss} **/*.{js,json,md,scss} !node_modules/**.*",
-    "docker-up": "node scripts/docker-up.js",
-    "docker-down": "node scripts/docker-down.js"
+    "docker-up": "docker-compose up -d --build",
+    "docker-down": "docker-compose down",
+    "docker-up:combined": "docker-compose up -d --build && cd client/ && yarn docker-up",
+    "docker-down:combined": "docker-compose down && cd client/ && yarn docker-down"
   },
   "keywords": [],
   "author": "ClickPopMedia",
