@@ -10,10 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       data: DataTypes.JSONB,
       userAgent: DataTypes.STRING,
-      ipAddress: {
-        type: DataTypes.INET,
+      ipAddress: DataTypes.INET,
+      respondent: DataTypes.STRING,
+      ipAddressFormatted: {
+        type: DataTypes.VIRTUAL,
         get() {
-          const rawValue = this.getDataValue('ipAddress');
+          const rawValue = this.ipAddress;
           let tempIP = ip6addr.parse(rawValue);
           let ipv4 = tempIP.toString({ format: 'v4' });
           let ipv6 = tempIP.toString({ format: 'v6' });
@@ -26,14 +28,21 @@ module.exports = (sequelize, DataTypes) => {
           }
           return returnValue;
         },
+        set(value) {
+          throw new Error(
+            `Cannot explicitly set the \`ipAddressFormatted\` property. Value: \`${value}\` rejected.`,
+          );
+        },
       },
-      respondent: DataTypes.STRING,
       geo: {
         type: DataTypes.VIRTUAL,
         get() {
           let rVal = null;
-          if (typeof this.ipAddress === 'object' && 'ipv4' in this.ipAddress) {
-            rVal = geoip.lookup(this.ipAddress.ipv4);
+          if (
+            typeof this.ipAddressFormatted === 'object' &&
+            'ipv4' in this.ipAddressFormatted
+          ) {
+            rVal = geoip.lookup(this.ipAddressFormatted.ipv4);
           }
           return rVal;
         },
