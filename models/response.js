@@ -2,6 +2,8 @@
 const { Model } = require('sequelize');
 const geoip = require('geoip-lite');
 const ip6addr = require('ip6addr');
+var iso31661 = require('iso-3166');
+var iso31662 = require('iso-3166/2');
 
 module.exports = (sequelize, DataTypes) => {
   class Response extends Model {}
@@ -67,6 +69,47 @@ module.exports = (sequelize, DataTypes) => {
               }
             } else if (typeof rVal === 'object' && rVal !== null) {
               rVal.type = 'location';
+              let locationArray = [];
+              let locationString;
+
+              if ('city' in rVal && rVal.city) {
+                locationArray.push(rVal.city);
+              }
+
+              if ('region' in rVal && rVal.region) {
+                if ('country' in rVal && rVal.country) {
+                  let regionCode = `${rVal.country}-${rVal.region}`;
+                  let regionDecoded = iso31662.find((obj) => {
+                    if (obj.code === regionCode) return true;
+                  });
+
+                  if (
+                    typeof regionDecoded === 'object' &&
+                    regionDecoded !== null &&
+                    'name' in regionDecoded
+                  ) {
+                    locationArray.push(regionDecoded.name);
+                  }
+                }
+              }
+
+              if ('country' in rVal && rVal.country) {
+                let countryCode = `${rVal.country}`;
+                let countryDecoded = iso31661.find((obj) => {
+                  if (obj.alpha2 === countryCode) return true;
+                });
+
+                if (
+                  typeof countryDecoded === 'object' &&
+                  countryDecoded !== null &&
+                  'name' in countryDecoded
+                ) {
+                  locationArray.push(countryDecoded.name);
+                }
+              }
+
+              locationString = locationArray.join(', ');
+              rVal.pretty = locationString;
             }
           }
           return rVal;
