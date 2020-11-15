@@ -2,6 +2,7 @@
 const { Model } = require('sequelize');
 const geoip = require('geoip-lite');
 const ip6addr = require('ip6addr');
+const hashIds = require('../helpers/hashIds');
 var iso31661 = require('iso-3166');
 var iso31662 = require('iso-3166/2');
 
@@ -10,6 +11,17 @@ module.exports = (sequelize, DataTypes) => {
 
   Response.init(
     {
+      hash: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return hashIds.encode(this.id);
+        },
+        set(value) {
+          throw new Error(
+            `Cannot explicitly set the \`hash\` property. Value: \`${value}\` rejected.`,
+          );
+        },
+      },
       data: DataTypes.JSONB,
       userAgent: DataTypes.STRING,
       ipAddress: DataTypes.INET,
