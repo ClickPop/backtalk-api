@@ -5,16 +5,16 @@ const app = express();
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const restrictAccess = require('../middleware/restrictAccess');
+const cors = require('cors');
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 
-app.use(
-  require('cors')({
-    origin:
-      process.env.NODE_ENV !== 'production' ? '*' : process.env.CLIENT_URL,
-  }),
-);
+const corsOpts = {
+  origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : '*',
+};
+
+app.use(cors(corsOpts));
 
 // Restrict Access: Disallow Robots/Crawlers if in production
 // Enable Morgan logger on anything except production for testing
