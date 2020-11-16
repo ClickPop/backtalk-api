@@ -17,10 +17,10 @@ if [[ $CIRCLE_BRANCH == 'develop' ]]; then
   echo -e "PORT=5001\n
 DB_PORT=5432\n
 CLIENT_HOSTNAME=https://develop.backtalk.io/\n
-DB_HOST=backtalk-db-staging\n
-API_NAME=backtalk-api-staging\n
-DB_NAME=backtalk-db-staging\n
-DB_LOCATION=/data-staging" >> .env
+DB_HOST=backtalk-db-develop\n
+API_NAME=backtalk-api-develop\n
+DB_NAME=backtalk-db-develop\n
+DB_LOCATION=/data-develop" >> .env
   
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-staging
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
