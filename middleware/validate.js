@@ -99,6 +99,7 @@ const checkSurveyQuestions = [
     .withMessage(messages.mismatch('questions', 'array')),
   body('questions.*.prompt')
     .exists()
+    .notEmpty()
     .withMessage(messages.required('question.prompt'))
     .trim()
     .escape()
