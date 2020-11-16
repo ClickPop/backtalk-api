@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(
   require('cors')({
     origin:
-      process.env.NODE_ENV !== 'production' ? '*' : process.env.CLIENT_URL,
+      process.env.NODE_ENV !== 'production' ? '*' : process.env.CLIENT_HOSTNAME,
   }),
 );
 
