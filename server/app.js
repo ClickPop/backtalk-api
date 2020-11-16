@@ -11,7 +11,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 
 const corsOpts = {
-  origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : '*',
+  origin: process.env.NODE_ENV === 'production' ? /backtalk\.io$/ : '*',
+  credentials: true,
 };
 
 app.use(cors(corsOpts));
