@@ -17,6 +17,13 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(restrictAccess);
 }
 
+app.use(
+  require('cors')({
+    origin:
+      process.env.NODE_ENV !== 'production' ? '*' : process.env.CLIENT_URL,
+  }),
+);
+
 // Default Route
 app.get('/', (req, res) => {
   return res.json({ data: 'Welcome to this survey app!' });
