@@ -79,4 +79,4 @@ jobs:
           command: sudo chmod +x ./scripts/transfer.sh && ./scripts/transfer.sh
       - run:
           name: "Execute deployment script on remote machine"
-          command: sudo chmod +x ./scripts/develop.sh && ./scripts/deploy.sh
+          command: sudo chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh
