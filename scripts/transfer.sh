@@ -16,7 +16,7 @@ NODE_COMMAND=npm start" > .env
 if [[ $CIRCLE_BRANCH == 'develop' ]]; then
   echo -e "PORT=5001\n
 DB_PORT=5432\n
-CLIENT_HOSTNAME=https://develop.backtalk.io/\n
+CLIENT_URL=https://develop.backtalk.io\n
 DB_HOST=backtalk-db-develop\n
 API_NAME=backtalk-api-develop\n
 DB_NAME=backtalk-db-develop\n
@@ -26,7 +26,7 @@ DB_LOCATION=/data-develop" >> .env
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
   echo -e "PORT=5000\n
 DB_PORT=1\n
-CLIENT_HOSTNAME=https://backtalk.io/\n
+CLIENT_URL=https://backtalk.io\n
 DB_HOST=backtalk-db\n
 API_NAME=backtalk-api\n
 DB_NAME=backtalk-db\n
