@@ -15,7 +15,7 @@ workflows:
             branches:
               only:
                 - master
-                - staging
+                - develop
 
 jobs:
   test:

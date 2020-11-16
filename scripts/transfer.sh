@@ -10,13 +10,13 @@ COOKIE_SECRET=$COOKIE_SECRET\n
 ACCESS_TOKEN_EXPIRATION=$ACCESS_TOKEN_EXPIRATION\n
 REFRESH_TOKEN_EXPIRATION=$REFRESH_TOKEN_EXPIRATION\n
 NODE_ENV=production\n
-DB_PORT=1\n
 NODE_COMMAND=npm start" > .env
 
 # Handle whether we are on the develop or master branch
 if [[ $CIRCLE_BRANCH == 'develop' ]]; then
   echo -e "PORT=5001\n
-CLIENT_HOSTNAME=https://staging.backtalk.io/\n
+DB_PORT=5432\n
+CLIENT_HOSTNAME=https://develop.backtalk.io/\n
 DB_HOST=backtalk-db-staging\n
 API_NAME=backtalk-api-staging\n
 DB_NAME=backtalk-db-staging\n
@@ -25,6 +25,7 @@ DB_LOCATION=/data-staging" >> .env
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-staging
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
   echo -e "PORT=5000\n
+DB_PORT=1\n
 CLIENT_HOSTNAME=https://backtalk.io/\n
 DB_HOST=backtalk-db\n
 API_NAME=backtalk-api\n
