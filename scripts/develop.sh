@@ -1,4 +1,4 @@
 #!/bin/bash
-cd backtalk-api
+cd backtalk-develop
 docker-compose up -d --build --force-recreate
 rm .env
