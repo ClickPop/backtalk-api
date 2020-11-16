@@ -22,7 +22,7 @@ API_NAME=backtalk-api-develop\n
 DB_NAME=backtalk-db-develop\n
 DB_LOCATION=/data-develop" >> .env
   
-  rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-staging
+  rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-develop
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
   echo -e "PORT=5000\n
 DB_PORT=1\n
