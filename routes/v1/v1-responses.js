@@ -63,6 +63,44 @@ router.patch('/update', async (req, res, next) => {
   }
 });
 
+router.get('/single/:responseId', async (req, res, next) => {
+  try {
+    const id = await hashIds.decode(req.params.responseId);
+    if (!id) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'NOOOOOO',
+            location: 'url',
+          },
+        ],
+      });
+    }
+    const response = await Response.findOne({
+      where: { id: id },
+      include: {
+        model: Survey,
+        include: [Question],
+      },
+    });
+    res.status(200).json({
+      response: response,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
 router.get('/:surveyId', authenticate, async (req, res, next) => {
   try {
     const id = await hashIds.decode(req.params.surveyId)[0];
@@ -83,6 +121,7 @@ router.get('/:surveyId', authenticate, async (req, res, next) => {
     });
     const responses = survey.Responses;
     const questions = survey.Questions;
+
     res.status(200).json({
       results: responses,
       questions,
@@ -155,5 +194,4 @@ router.delete('/delete', authenticate, async (req, res, next) => {
     });
   }
 });
-
 module.exports = router;
