@@ -45,8 +45,8 @@ jobs:
           command: npm test
       - store_test_results:
           path: reports
-      - coveralls/upload:
-          path_to_lcov: ./reports/coverage/lcov.info
+      # - coveralls/upload:
+      #     path_to_lcov: ./reports/coverage/lcov.info
 
     environment:
       DB_TEST_USERNAME: postgres
