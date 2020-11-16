@@ -99,12 +99,14 @@ const checkSurveyQuestions = [
     .withMessage(messages.mismatch('questions', 'array')),
   body('questions.*.prompt')
     .exists()
-    .notEmpty()
     .withMessage(messages.required('question.prompt'))
     .trim()
     .escape()
     .isString()
-    .withMessage(messages.mismatch('question.prompt', 'string')),
+    .withMessage(messages.mismatch('question.prompt', 'string'))
+    .isLength({ min: 3 })
+    .withMessage('Prompt must be at least 3 characters'),
+
   body('questions.*.description')
     .optional()
     .trim()
