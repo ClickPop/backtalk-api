@@ -130,6 +130,32 @@ describe('Responses', () => {
     });
   });
 
+  describe('Get Single Response', () => {
+    it('should respond with a 200 and all the data for a given response', async (done) => {
+      const hash = hashIds.encode(commonInfo.firstResponse.id);
+      const res = await req.get(`/api/v1/responses/single/${hash}`);
+      expect(res.body).toHaveProperty('response');
+      expect(typeof res.body.response).toBe('object');
+      expect(res.body.response).toHaveProperty('hash');
+      expect(res.body.response.hash).toBe(hash);
+      done();
+    });
+
+    it('should respond with a 404 if the response does not exist', async (done) => {
+      const res = await req.get(`/api/v1/responses/single/doesNotExist`);
+      expect(res.status).toBe(404);
+      expect(res.body.errors).toEqual(
+        expect.arrayContaining([
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ]),
+      );
+      done();
+    });
+  });
+
   describe('Delete response', () => {
     it('should respond with a 200 if the response is deleted.', async (done) => {
       const res = await req

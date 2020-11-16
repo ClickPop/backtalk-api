@@ -71,7 +71,7 @@ router.get('/single/:responseId', async (req, res, next) => {
         status: 404,
         errors: [
           {
-            msg: 'NOOOOOO',
+            msg: 'Not Found',
             location: 'url',
           },
         ],
@@ -84,6 +84,19 @@ router.get('/single/:responseId', async (req, res, next) => {
         include: [Question],
       },
     });
+
+    if (!response) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+
     res.status(200).json({
       response: response,
     });
