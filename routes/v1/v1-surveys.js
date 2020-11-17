@@ -7,7 +7,7 @@ const {
   checkTitle,
   checkSurveyQuestions,
 } = require('../../middleware/validate');
-const { Survey, Question, Session, User } = require('../../models');
+const { Survey, Question, User, Response } = require('../../models');
 const hashIds = require('../../helpers/hashIds');
 
 router.get('/getHash', async (req, res) => {
@@ -28,6 +28,7 @@ router.post(
         description: req.body.description || null,
         Questions: req.body.questions,
         UserId: req.user.id,
+        respondent: req.body.respondent,
       };
       const survey = await Survey.create(
         {
@@ -37,11 +38,11 @@ router.post(
           include: Question,
         },
       );
-
       let result = survey.toJSON().renameProperty('Questions', 'questions');
+      const hash = await hashIds.encode(result.id);
       return res.status(200).json({
         created: true,
-        result,
+        result: { ...result, hash },
       });
     } catch (err) {
       next({
@@ -74,12 +75,16 @@ router.get('/', authenticate, async (req, res, next) => {
           attributes: ['id', 'email', 'name'],
         },
         Question,
-        Session,
+        Response,
       ],
     });
-    let results = surveys.map((survey) =>
-      survey.toJSON().renameProperty('Questions', 'questions'),
-    );
+    let results = [];
+    for (let i = 0; i < surveys.length; i++) {
+      results.push({
+        ...surveys[i].toJSON().renameProperty('Questions', 'questions'),
+        hash: await hashIds.encode(surveys[i].id),
+      });
+    }
     res.status(200).json({
       results,
     });
@@ -114,7 +119,7 @@ router.get('/:hash', async (req, res, next) => {
       where: {
         id,
       },
-      include: [Question, Session],
+      include: [Question],
     });
     let result = survey.toJSON().renameProperty('Questions', 'questions');
     result = { ...result };

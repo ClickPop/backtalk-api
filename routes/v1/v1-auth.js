@@ -72,6 +72,24 @@ router.post(
   },
 );
 
+router.post('/logout', async (req, res, next) => {
+  try {
+    return res.clearCookie('jrt').status(200).json({
+      logout: true,
+    });
+  } catch (error) {
+    console.error(error);
+    next({
+      status: 500,
+      errors: [
+        {
+          msg: 'Server error',
+        },
+      ],
+    });
+  }
+});
+
 router.post('/refresh_token', async (req, res, next) => {
   try {
     const { jrt } = req.signedCookies;

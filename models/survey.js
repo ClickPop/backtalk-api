@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
+      respondent: DataTypes.BOOLEAN,
     },
     {
       sequelize,
@@ -18,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       through: 'SurveyQuestions',
       onDelete: 'CASCADE',
     });
-    Survey.hasMany(models.Session);
+    Survey.hasMany(models.Response);
   };
   return Survey;
 };

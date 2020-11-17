@@ -7,17 +7,98 @@ const hashIds = require('../../helpers/hashIds');
 
 router.post('/new', async (req, res, next) => {
   try {
-    const { responses } = req.body;
-    responses.forEach((response) => {
-      response.renameProperty('questionId', 'QuestionId');
-    });
-    const data = await Response.bulkCreate(responses);
-    data.forEach((response) => {
-      response.renameProperty('questionId', 'QuestionId');
+    const { surveyId, responses, respondent } = req.body;
+    const data = await Response.create({
+      SurveyId: surveyId,
+      data: responses,
+      ipAddress: req.headers['x-real-ip'],
+      userAgent: req.headers['user-agent'],
+      respondent,
     });
     res.status(200).json({
       created: true,
-      results: data,
+      result: data,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
+router.patch('/update', async (req, res, next) => {
+  try {
+    const { responseId, responses, respondent } = req.body;
+
+    await Response.update(
+      {
+        data: responses,
+        respondent,
+      },
+      { where: { id: responseId } },
+    );
+    const data = await Response.findOne({ where: { id: responseId } });
+    res.status(200).json({
+      updated: true,
+      result: data,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
+router.get('/single/:responseId', async (req, res, next) => {
+  try {
+    const id = await hashIds.decode(req.params.responseId);
+    if (!id) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+    const response = await Response.findOne({
+      where: { id: id },
+      include: {
+        model: Survey,
+        include: [Question],
+      },
+    });
+
+    if (!response) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+
+    res.status(200).json({
+      response: response,
     });
   } catch (err) {
     console.error(err);
@@ -48,17 +129,15 @@ router.get('/:surveyId', authenticate, async (req, res, next) => {
       });
     }
     const survey = await Survey.findOne({
-      where: { id: id },
-      include: [Question],
+      where: { id: id, UserId: req.user.id },
+      include: [Response, Question],
     });
+    const responses = survey.Responses;
     const questions = survey.Questions;
-    const responses = [];
-    for (const question of questions) {
-      const resps = await question.getResponses();
-      resps.forEach((resp) => responses.push(resp.toJSON()));
-    }
+
     res.status(200).json({
       results: responses,
+      questions,
     });
   } catch (err) {
     console.error(err);
@@ -88,6 +167,22 @@ router.delete('/delete', authenticate, async (req, res, next) => {
         ],
       });
     }
+    const survey = await Survey.findOne({
+      where: {
+        UserId: req.user.id,
+      },
+      include: [{ model: Response, where: { id: id } }],
+    });
+    if (!survey) {
+      return next({
+        status: 401,
+        errors: [
+          {
+            msg: 'Unauthorized',
+          },
+        ],
+      });
+    }
     const response = await Response.destroy({
       where: {
         id,
@@ -112,5 +207,4 @@ router.delete('/delete', authenticate, async (req, res, next) => {
     });
   }
 });
-
 module.exports = router;

@@ -6,23 +6,24 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
       },
-      value: {
+      data: {
+        type: Sequelize.JSONB,
+      },
+      userAgent: {
         type: Sequelize.STRING,
       },
-      QuestionId: {
-        type: Sequelize.BIGINT,
-        references: {
-          model: 'Questions',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
+      ipAddress: {
+        type: Sequelize.INET,
       },
-      SessionId: {
+      respondent: {
+        type: Sequelize.STRING,
+      },
+      SurveyId: {
         type: Sequelize.BIGINT,
         references: {
-          model: 'Sessions',
+          model: 'Surveys',
           key: 'id',
         },
         onDelete: 'CASCADE',

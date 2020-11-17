@@ -15,7 +15,7 @@ module.exports = {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -50,10 +50,10 @@ module.exports = {
   // forceCoverageMatch: [],
 
   // A path to a module which exports an async function that is triggered once before all test suites
-  globalSetup: './globalSetup.js',
+  globalSetup: './scripts/globalSetup.js',
 
   // A path to a module which exports an async function that is triggered once after all test suites
-  globalTeardown: './globalTeardown.js',
+  globalTeardown: './scripts/globalTeardown.js',
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
@@ -133,7 +133,7 @@ module.exports = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['./jest.sequelizeClose.js'],
+  setupFilesAfterEnv: ['./scripts/jest.sequelizeClose.js'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,

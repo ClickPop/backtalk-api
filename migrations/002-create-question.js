@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       type: {
-        type: Sequelize.ENUM('text'),
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'text',
       },

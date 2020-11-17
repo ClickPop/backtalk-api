@@ -1,26 +1,32 @@
 const supertest = require('supertest');
-const app = require('../app');
+const app = require('../server/app');
 const req = supertest.agent(app);
 const commonInfo = require('./commonData');
 const hashIds = require('../helpers/hashIds');
+const uaString =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
 
 describe('Responses', () => {
   beforeAll(async (done) => {
-    await req.post('/api/v1/users/register').send({
+    await req.post('/api/v1/users/register').set('User-Agent', uaString).send({
       email: 'test2@test.com',
       name: 'Test User',
       password: 'Test1234!',
     });
 
-    const res = await req.post('/api/v1/auth/login').send({
-      email: 'test2@test.com',
-      password: 'Test1234!',
-    });
+    const res = await req
+      .post('/api/v1/auth/login')
+      .set('User-Agent', uaString)
+      .send({
+        email: 'test2@test.com',
+        password: 'Test1234!',
+      });
     commonInfo.accessToken = res.body.accessToken;
 
     const survey = await req
       .post('/api/v1/surveys/new')
       .set('Authorization', `Bearer ${res.body.accessToken}`)
+      .set('User-Agent', uaString)
       .send({
         title: 'Test Title',
         description: 'This is a test description',
@@ -44,7 +50,8 @@ describe('Responses', () => {
   afterAll(async (done) => {
     await req
       .delete('/api/v1/users/delete')
-      .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+      .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+      .set('User-Agent', uaString);
     done();
   });
 
@@ -53,18 +60,23 @@ describe('Responses', () => {
       const responses = commonInfo.firstSurvey.result.questions.map(
         (question, i) => ({
           value: `Response to question ${i + 1}`,
-          respondent: 'Greg',
-          questionId: question.id,
+          id: question.id,
+          type: 'text',
         }),
       );
-      const res = await req.post('/api/v1/responses/new').send({
-        responses,
-      });
+      const res = await req
+        .post('/api/v1/responses/new')
+        .set('User-Agent', uaString)
+        .send({
+          surveyId: commonInfo.firstSurvey.result.id,
+          responses,
+          respondent: 'Greg',
+        });
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('results');
-      expect(res.body.results).toBeDefined();
-      expect(Array.isArray(res.body.results)).toBeTruthy();
-      commonInfo.firstResponse = res.body.results[0];
+      expect(res.body).toHaveProperty('result');
+      expect(res.body.result).toBeDefined();
+      expect(Array.isArray(res.body.result.data)).toBe(true);
+      commonInfo.firstResponse = res.body.result;
       done();
     });
   });
@@ -77,9 +89,10 @@ describe('Responses', () => {
             commonInfo.firstSurvey.result.id,
           )}`,
         )
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.body).toHaveProperty('results');
-      expect(Array.isArray(res.body.results)).toBeTruthy();
+      expect(Array.isArray(res.body.results)).toBe(true);
       expect(res.body.results.length).toBeGreaterThan(0);
       done();
     });
@@ -87,7 +100,8 @@ describe('Responses', () => {
     it('should respond with a 404 if the survey does not exist', async (done) => {
       const res = await req
         .get(`/api/v1/responses/doesNotExist`)
-        .set('Authorization', `Bearer ${commonInfo.accessToken}`);
+        .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(404);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([
@@ -101,9 +115,9 @@ describe('Responses', () => {
     });
 
     it('should respond with a 401 if the user is not logged in.', async (done) => {
-      const res = await req.get(
-        `/api/v1/responses/${commonInfo.firstSurvey.id}`,
-      );
+      const res = await req
+        .get(`/api/v1/responses/${commonInfo.firstSurvey.id}`)
+        .set('User-Agent', uaString);
       expect(res.status).toBe(401);
       expect(res.body.errors).toEqual(
         expect.arrayContaining([
@@ -116,11 +130,38 @@ describe('Responses', () => {
     });
   });
 
+  describe('Get Single Response', () => {
+    it('should respond with a 200 and all the data for a given response', async (done) => {
+      const hash = hashIds.encode(commonInfo.firstResponse.id);
+      const res = await req.get(`/api/v1/responses/single/${hash}`);
+      expect(res.body).toHaveProperty('response');
+      expect(typeof res.body.response).toBe('object');
+      expect(res.body.response).toHaveProperty('hash');
+      expect(res.body.response.hash).toBe(hash);
+      done();
+    });
+
+    it('should respond with a 404 if the response does not exist', async (done) => {
+      const res = await req.get(`/api/v1/responses/single/doesNotExist`);
+      expect(res.status).toBe(404);
+      expect(res.body.errors).toEqual(
+        expect.arrayContaining([
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ]),
+      );
+      done();
+    });
+  });
+
   describe('Delete response', () => {
     it('should respond with a 200 if the response is deleted.', async (done) => {
       const res = await req
         .delete('/api/v1/responses/delete')
         .set('Authorization', `Bearer ${commonInfo.accessToken}`)
+        .set('User-Agent', uaString)
         .send({ responseId: commonInfo.firstResponse.id });
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -132,6 +173,7 @@ describe('Responses', () => {
     it('should respond with a 401 if the user is not logged in.', async (done) => {
       const res = await req
         .delete('/api/v1/responses/delete')
+        .set('User-Agent', uaString)
         .send({ surveyId: 0 });
       expect(res.status).toBe(401);
       expect(res.body.errors).toEqual(
