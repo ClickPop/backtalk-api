@@ -11,7 +11,7 @@ router.post('/new', async (req, res, next) => {
     const data = await Response.create({
       SurveyId: surveyId,
       data: responses,
-      ipAddress: req.ip,
+      ipAddress: req.headers['x-real-ip'],
       userAgent: req.headers['user-agent'],
       respondent,
     });
