@@ -1,6 +1,6 @@
 {
   "name": "backtalk-api",
-  "version": "0.1.0-alpha1",
+  "version": "1.0.0-alpha.1",
   "description": "API Service for backtalk.io",
   "main": "./server/server.js",
   "scripts": {
@@ -33,10 +33,10 @@
   "author": "ClickPopMedia",
   "contributors": [
     {
-      "name": "Sean Metzgar"
+      "name": "Graham Vasquez"
     },
     {
-      "name": "Graham Vasquez"
+      "name": "Sean Metzgar"
     },
     {
       "name": "Chris Vasquez"
