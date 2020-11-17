@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const restrictAccess = require('../middleware/restrictAccess');
 const cors = require('cors');
+const { rootResponse } = require('../helpers/apiDetails');
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Default Route
 app.get('/', (req, res) => {
-  return res.json({ data: 'Welcome to this survey app!' });
+  return res.json(rootResponse);
 });
 
 // API (v1) Routes Loader
