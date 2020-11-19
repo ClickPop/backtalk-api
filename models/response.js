@@ -5,6 +5,7 @@ const ip6addr = require('ip6addr');
 const hashIds = require('../helpers/hashIds');
 var iso31661 = require('iso-3166');
 var iso31662 = require('iso-3166/2');
+const DeviceDetector = require('device-detector-js');
 
 module.exports = (sequelize, DataTypes) => {
   class Response extends Model {}
@@ -129,6 +130,23 @@ module.exports = (sequelize, DataTypes) => {
         set(value) {
           throw new Error(
             `Cannot explicitly set the \`geo\` property. Value: \`${value}\` rejected.`,
+          );
+        },
+      },
+      device: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          let rVal = null;
+          let device = new DeviceDetector();
+          if (this.userAgent !== null && typeof this.userAgent === 'string') {
+            let decodedDevice = device.parse(this.userAgent);
+            rVal = typeof decodedDevice === 'object' ? decodedDevice : null;
+          }
+          return rVal;
+        },
+        set(value) {
+          throw new Error(
+            `Cannot explicitly set the \`device\` property. Value: \`${value}\` rejected.`,
           );
         },
       },
