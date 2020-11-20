@@ -1,9 +1,11 @@
-const isbot = require('isbot');
+const DeviceDetector = require('device-detector-js');
 
 module.exports = async (req, _, next) => {
-  const userAgent = req.get('user-agent');
+  let userAgent = req.get('user-agent');
+  let detector = new DeviceDetector();
+  let bot = detector.botParser.parse(userAgent);
 
-  if (isbot(userAgent)) {
+  if (bot) {
     return next({
       status: 403,
       errors: [
