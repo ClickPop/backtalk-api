@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       name: DataTypes.STRING,
+      passwordResetToken: DataTypes.STRING,
+      passwordResetExpiry: DataTypes.DATE,
     },
     {
       sequelize,
@@ -19,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Survey);
   };
 
+  // I don't think this works how we are expecting it to.
+  // See https://sequelizedocs.fullstackacademy.com/instance-and-class-methods/
   User.toJSON = function () {
     // hide protected fields
     let attributes = Object.assign({}, this.get());
