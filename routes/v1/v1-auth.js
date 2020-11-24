@@ -210,6 +210,8 @@ router.post('/reset-challenge', async (req, res, next) => {
     });
 
     if (process.env.NODE_ENV !== 'production') {
+      //eslint-disable-next-line
+      console.log(nodemailer.getTestMessageUrl(mail));
       return res.status(200).json({
         url: nodemailer.getTestMessageUrl(mail),
         token,
@@ -232,8 +234,8 @@ router.post('/reset-challenge', async (req, res, next) => {
   }
 });
 
-router.post('/reset-password', async (req, res, next) => {
-  const { token, password } = req.body;
+router.post('/validate-reset-token', async (req, res, next) => {
+  const { token } = req.body;
   try {
     const user = await User.findOne({
       where: {
@@ -242,45 +244,13 @@ router.post('/reset-password', async (req, res, next) => {
     });
 
     if (!user) {
-      return next({
-        status: 404,
-        errors: [
-          {
-            msg: 'Not found',
-          },
-        ],
+      return res.status(200).json({
+        resetTokenValid: false,
       });
     }
-
-    if (compareAsc(user.passwordResetExpiry, new Date()) !== 1) {
-      return next({
-        status: 422,
-        errors: [
-          {
-            msg: 'Reset Token Expired',
-          },
-        ],
-      });
-    }
-
-    if (await compare(password, user.password)) {
-      return next({
-        status: 422,
-        errors: [
-          {
-            msg: 'Password is the same as the old one',
-          },
-        ],
-      });
-    }
-
-    user.password = await hash(password, 10);
-    user.passwordResetToken = null;
-    user.passwordResetExpiry = null;
-    await user.save();
 
     return res.status(200).json({
-      passwordReset: true,
+      resetTokenValid: true,
     });
   } catch (error) {
     console.error(error);
@@ -294,5 +264,73 @@ router.post('/reset-password', async (req, res, next) => {
     });
   }
 });
+
+router.post(
+  '/reset-password',
+  [checkPassword],
+  checkValidationResult,
+  async (req, res, next) => {
+    const { token, password } = req.body;
+    try {
+      const user = await User.findOne({
+        where: {
+          passwordResetToken: token,
+        },
+      });
+
+      if (!user) {
+        return next({
+          status: 404,
+          errors: [
+            {
+              msg: 'Not found',
+            },
+          ],
+        });
+      }
+
+      if (compareAsc(user.passwordResetExpiry, new Date()) !== 1) {
+        return next({
+          status: 422,
+          errors: [
+            {
+              msg: 'Reset Token Expired',
+            },
+          ],
+        });
+      }
+
+      if (await compare(password, user.password)) {
+        return next({
+          status: 422,
+          errors: [
+            {
+              msg: 'Password is the same as the old one',
+            },
+          ],
+        });
+      }
+
+      user.password = await hash(password, 10);
+      user.passwordResetToken = null;
+      user.passwordResetExpiry = null;
+      await user.save();
+
+      return res.status(200).json({
+        passwordReset: true,
+      });
+    } catch (error) {
+      console.error(error);
+      next({
+        status: 500,
+        errors: [
+          {
+            msg: 'Server error',
+          },
+        ],
+      });
+    }
+  },
+);
 
 module.exports = router;
