@@ -10,7 +10,11 @@ COOKIE_SECRET=$COOKIE_SECRET\n
 ACCESS_TOKEN_EXPIRATION=$ACCESS_TOKEN_EXPIRATION\n
 REFRESH_TOKEN_EXPIRATION=$REFRESH_TOKEN_EXPIRATION\n
 NODE_ENV=production\n
-NODE_COMMAND=npm start" > .env
+NODE_COMMAND=npm start\n
+PASSWORD_RESET_EXPIRY=10\n
+MAIL_HOST=$MAIL_HOST\n
+MAIL_USER=$MAIL_USER\n
+MAIL_PASSWORD=$MAIL_PASSWORD" > .env
 
 # Handle whether we are on the develop or master branch
 if [[ $CIRCLE_BRANCH == 'develop' ]]; then
@@ -19,7 +23,8 @@ DB_PORT=5432\n
 DB_HOST=backtalk-db-develop\n
 API_NAME=backtalk-api-develop\n
 DB_NAME=backtalk-db-develop\n
-DB_LOCATION=/data-develop" >> .env
+DB_LOCATION=/data-develop\n
+RESET_EMAIL_URL=https://develop.backtalk.io/password-reset/" >> .env
   
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-develop
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
@@ -28,7 +33,8 @@ DB_PORT=1\n
 DB_HOST=backtalk-db\n
 API_NAME=backtalk-api\n
 DB_NAME=backtalk-db\n
-DB_LOCATION=/data" >> .env
+DB_LOCATION=/data\n
+RESET_EMAIL_URL=https://backtalk.io/password-reset/" >> .env
   
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-api
 fi
