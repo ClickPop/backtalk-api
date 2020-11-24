@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run:
           name: Update NPM
-          command: "sudo npm install -g npm"
+          command: 'sudo npm install -g npm'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -69,14 +69,14 @@ jobs:
           at: ~/backtalk-api
       - add_ssh_keys
       - run:
-          name: "Add keys to known_hosts"
+          name: 'Add keys to known_hosts'
           command: ssh-keyscan -H api.backtalk.io >> ~/.ssh/known_hosts
       - run:
-          name: "Install rsync"
+          name: 'Install rsync'
           command: sudo apt-get update && sudo apt-get install rsync
       - run:
-          name: "Execute transfer script to setup .env and transfer files via rsync"
+          name: 'Execute transfer script to setup .env and transfer files via rsync'
           command: sudo chmod +x ./scripts/transfer.sh && ./scripts/transfer.sh
       - run:
-          name: "Execute deployment script on remote machine"
+          name: 'Execute deployment script on remote machine'
           command: sudo chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh

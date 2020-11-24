@@ -139,6 +139,75 @@ router.get('/:hash', async (req, res, next) => {
   }
 });
 
+router.patch('/update', authenticate, async (req, res, next) => {
+  try {
+    const id = req.body.surveyId;
+    if (!id) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+
+    await Survey.update(
+      {
+        title: req.body.title,
+        description: req.body.description,
+        Questions: req.body.questions,
+        respondent: req.body.respondent,
+      },
+      {
+        where: {
+          id,
+          UserId: req.user.id,
+        },
+      },
+    );
+
+    const survey = await Survey.findOne({
+      where: {
+        id,
+        UserId: req.user.id,
+      },
+      include: [Question],
+    });
+
+    if (!survey) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+
+    let result = survey.toJSON().renameProperty('Questions', 'questions');
+    result = { ...result };
+    res.status(201).json({
+      result,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
 router.delete('/delete', authenticate, async (req, res, next) => {
   try {
     const id = req.body.surveyId;

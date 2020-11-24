@@ -138,6 +138,7 @@ router.get('/:surveyId', authenticate, async (req, res, next) => {
     res.status(200).json({
       results: responses,
       questions,
+      survey,
     });
   } catch (err) {
     console.error(err);
