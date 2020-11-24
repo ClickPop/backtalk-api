@@ -13,7 +13,8 @@ const {
   checkValidationResult,
 } = require('../../middleware/validate');
 const { add, compareAsc } = require('date-fns');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const router = express.Router();
 
@@ -162,31 +163,8 @@ router.post('/reset-challenge', async (req, res, next) => {
     user.passwordResetExpiry = resetExpiry;
     await user.save();
 
-    const mailData = {};
-    if (process.env.NODE_ENV !== 'production') {
-      let testAccount = await nodemailer.createTestAccount();
-
-      mailData.host = 'smtp.ethereal.email';
-      mailData.port = 587;
-      mailData.secure = false;
-      mailData.auth = {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      };
-    } else {
-      mailData.host = process.env.MAIL_HOST;
-      mailData.port = 465;
-      mailData.secure = true;
-      mailData.auth = {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD,
-      };
-    }
-
-    const transport = nodemailer.createTransport(mailData);
-
-    const mail = await transport.sendMail({
-      from: 'chris@clickpopmedia.com',
+    const msg = {
+      from: 'graham@clickpopmedia.com',
       to: email,
       subject: 'Backtalk Password Reset',
       text: `
@@ -207,13 +185,12 @@ router.post('/reset-challenge', async (req, res, next) => {
           process.env.RESET_EMAIL_URL
         }${token}" target="_blank">this link</a> and we can get you back up and running in no time! :)
       `,
-    });
+    };
+
+    await sgMail.send(msg);
 
     if (process.env.NODE_ENV !== 'production') {
-      //eslint-disable-next-line
-      console.log(nodemailer.getTestMessageUrl(mail));
       return res.status(200).json({
-        url: nodemailer.getTestMessageUrl(mail),
         token,
       });
     }

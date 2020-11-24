@@ -12,9 +12,7 @@ REFRESH_TOKEN_EXPIRATION=$REFRESH_TOKEN_EXPIRATION\n
 NODE_ENV=production\n
 NODE_COMMAND=npm start\n
 PASSWORD_RESET_EXPIRY=10\n
-MAIL_HOST=$MAIL_HOST\n
-MAIL_USER=$MAIL_USER\n
-MAIL_PASSWORD=$MAIL_PASSWORD" > .env
+SENDGRID_KEY=$SENDGRID_KEY" > .env
 
 # Handle whether we are on the develop or master branch
 if [[ $CIRCLE_BRANCH == 'develop' ]]; then
