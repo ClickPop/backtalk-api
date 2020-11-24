@@ -27,7 +27,7 @@ RESET_EMAIL_URL=https://develop.backtalk.io/password-reset/" >> .env
   rsync -va --delete ./ circleci@api.backtalk.io:~/backtalk-develop
 elif [[ $CIRCLE_BRANCH == 'master' ]]; then
   echo -e "PORT=5000\n
-DB_PORT=5432\n
+DB_PORT=5431\n
 DB_HOST=backtalk-db\n
 API_NAME=backtalk-api\n
 DB_NAME=backtalk-db\n
