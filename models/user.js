@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       passwordResetToken: DataTypes.STRING,
       passwordResetExpiry: DataTypes.DATE,
-      role: DataTypes.STRING,
     },
     {
       sequelize,
@@ -20,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     User.hasMany(models.Survey);
+    User.belongsToMany(models.Role, {
+      through: 'UserRoles',
+      onDelete: 'CASCADE',
+    });
   };
 
   User.prototype.toJSON = function () {
@@ -31,19 +34,21 @@ module.exports = (sequelize, DataTypes) => {
     return attributes;
   };
 
-  User.prototype.hasRole = function (role = null) {
-    let hasRole = false;
-    role = typeof role === 'string' && role.length > 0 ? role : null;
-    if (role !== undefined && this.role === role) {
-      hasRole = true;
-    }
-    return hasRole;
-  };
+  // User.prototype.hasRole = function (role = null) {
+  //   let hasRole = false;
+  //   // role = typeof role === 'string' && role.length > 0 ? role : null;
+  //   // if (role !== null) {
+  //   //   let userRoles = this.getRoles();
+  //   //   console.log()
+  //   //   hasRole = true;
+  //   // }
+  //   return hasRole;
+  // };
 
-  User.prototype.isAdmin = function () {
-    let isAdmin = this.hasRole('admin') || false;
-    return isAdmin;
-  };
+  // User.prototype.isAdmin = function () {
+  //   let isAdmin = this.hasRole('admin') || false;
+  //   return isAdmin;
+  // };
 
   return User;
 };
