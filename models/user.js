@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       passwordResetToken: DataTypes.STRING,
       passwordResetExpiry: DataTypes.DATE,
+      role: DataTypes.STRING,
     },
     {
       sequelize,
@@ -21,15 +22,27 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Survey);
   };
 
-  // I don't think this works how we are expecting it to.
-  // See https://sequelizedocs.fullstackacademy.com/instance-and-class-methods/
-  User.toJSON = function () {
+  User.prototype.toJSON = function () {
     // hide protected fields
     let attributes = Object.assign({}, this.get());
     for (let a of PROTECTED_ATTRIBUTES) {
       delete attributes[a];
     }
     return attributes;
+  };
+
+  User.prototype.hasRole = function (role = null) {
+    let hasRole = false;
+    role = typeof role === 'string' && role.length > 0 ? role : null;
+    if (role !== undefined && this.role === role) {
+      hasRole = true;
+    }
+    return hasRole;
+  };
+
+  User.prototype.isAdmin = function () {
+    let isAdmin = this.hasRole('admin') || false;
+    return isAdmin;
   };
 
   return User;
