@@ -31,24 +31,28 @@ module.exports = (sequelize, DataTypes) => {
     for (let a of PROTECTED_ATTRIBUTES) {
       delete attributes[a];
     }
+
     return attributes;
   };
 
-  // User.prototype.hasRole = function (role = null) {
-  //   let hasRole = false;
-  //   // role = typeof role === 'string' && role.length > 0 ? role : null;
-  //   // if (role !== null) {
-  //   //   let userRoles = this.getRoles();
-  //   //   console.log()
-  //   //   hasRole = true;
-  //   // }
-  //   return hasRole;
-  // };
+  User.prototype.hasRole = async function (role = null) {
+    let hasRole = false;
 
-  // User.prototype.isAdmin = function () {
-  //   let isAdmin = this.hasRole('admin') || false;
-  //   return isAdmin;
-  // };
+    let userRoles = await this.getRoles();
+
+    if (userRoles !== null && Array.isArray(userRoles)) {
+      userRoles.map((currentRole) => {
+        if (currentRole.slug === role) hasRole = true;
+      });
+    }
+
+    return hasRole;
+  };
+
+  User.prototype.isAdmin = function () {
+    let isAdmin = this.hasRole('admin') || false;
+    return isAdmin;
+  };
 
   return User;
 };
