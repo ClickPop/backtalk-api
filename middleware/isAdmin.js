@@ -16,8 +16,8 @@ module.exports = async (req, _, next) => {
       id: req.user.id,
     },
   });
-
-  if (!user && !user.isAdmin())
+  const isAdmin = await user.isAdmin();
+  if (!user || !isAdmin)
     return next({
       status: 401,
       errors: [

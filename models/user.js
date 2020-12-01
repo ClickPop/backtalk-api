@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       userRoles !== null &&
       Array.isArray(userRoles) &&
       role !== null &&
-      userRoles.includes(role)
+      userRoles.some((r) => r.slug === role)
     );
   };
 
