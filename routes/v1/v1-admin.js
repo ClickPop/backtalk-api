@@ -1,4 +1,5 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const hashIds = require('../../helpers/hashIds');
 const authenticate = require('../../middleware/authenticate');
 const isAdmin = require('../../middleware/isAdmin');
@@ -26,9 +27,6 @@ router.get('/users', authenticate, isAdmin, async (req, res, next) => {
     const users = await User.findAll({
       limit: req.query.count || 20,
       offset: req.query.offset || 0,
-      attributes: {
-        exclude: ['passwordResetToken', 'passwordResetExpiry'],
-      },
       include: [
         {
           model: Survey,
@@ -66,15 +64,17 @@ router.get('/surveys', authenticate, isAdmin, async (req, res, next) => {
     const surveys = await Survey.findAll({
       limit: req.query.count || 20,
       offset: req.query.offset || 0,
+      where: {
+        UserId: {
+          [Op.ne]: null,
+        },
+      },
       attributes: {
         exclude: ['UserId'],
       },
       include: [
         {
           model: User,
-          where: {
-            id: req.user.id,
-          },
           attributes: {
             exclude: ['passwordResetToken', 'passwordResetExpiry', 'password'],
           },

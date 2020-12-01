@@ -1,6 +1,10 @@
 'use strict';
 const { Model } = require('sequelize');
-const PROTECTED_ATTRIBUTES = ['password', 'createdAt', 'updatedAt'];
+const PROTECTED_ATTRIBUTES = [
+  'password',
+  'passwordResetToken',
+  'passwordResetExpiry',
+];
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {}
