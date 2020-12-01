@@ -41,11 +41,16 @@ module.exports = (sequelize, DataTypes) => {
 
   User.prototype.hasRole = async function (role = null) {
     let userRoles = await this.getRoles();
+
     return (
       userRoles !== null &&
       Array.isArray(userRoles) &&
       role !== null &&
-      userRoles.some((r) => r.slug === role)
+      userRoles.some(
+        (r) =>
+          r.slug === role ||
+          (typeof role === 'object' && 'slug' in role && r.slug == role.slug),
+      )
     );
   };
 
