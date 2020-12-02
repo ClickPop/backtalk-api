@@ -139,6 +139,56 @@ router.get('/:hash', async (req, res, next) => {
   }
 });
 
+router.get('/share/:hash', async (req, res, next) => {
+  try {
+    const id = await hashIds.decode(req.params.hash)[0];
+    if (!id) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+    const survey = await Survey.findOne({
+      where: {
+        id,
+        isPublic: true,
+      },
+      include: [Question, Response],
+    });
+    if (!survey) {
+      return next({
+        status: 404,
+        errors: [
+          {
+            msg: 'Not Found',
+            location: 'url',
+          },
+        ],
+      });
+    }
+    survey.Responses = survey.Responses.map((response) => response.public());
+    res.status(200).json({
+      survey,
+    });
+  } catch (err) {
+    console.error(err);
+    next({
+      status: 500,
+      stack: err,
+      errors: [
+        {
+          msg: err.msg,
+        },
+      ],
+    });
+  }
+});
+
 router.patch('/update', authenticate, async (req, res, next) => {
   try {
     const id = req.body.surveyId;
@@ -160,6 +210,7 @@ router.patch('/update', authenticate, async (req, res, next) => {
         description: req.body.description,
         Questions: req.body.questions,
         respondent: req.body.respondent,
+        isPublic: req.body.isPublic,
       },
       {
         where: {

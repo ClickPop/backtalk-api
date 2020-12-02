@@ -6,6 +6,14 @@ const hashIds = require('../helpers/hashIds');
 var iso31661 = require('iso-3166');
 var iso31662 = require('iso-3166/2');
 const DeviceDetector = require('device-detector-js');
+const PROTECTED_ATTRIBUTES = [
+  'hash',
+  'userAgent',
+  'ipAddress',
+  'ipAddressFormatted',
+  'geo',
+  'device',
+];
 
 module.exports = (sequelize, DataTypes) => {
   class Response extends Model {}
@@ -158,6 +166,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Response.associate = function (models) {
     Response.belongsTo(models.Survey);
+  };
+
+  Response.prototype.public = function () {
+    // hide protected fields
+    let attributes = Object.assign({}, this.get());
+    for (let a of PROTECTED_ATTRIBUTES) {
+      delete attributes[a];
+    }
+    return attributes;
   };
 
   return Response;
