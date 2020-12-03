@@ -19,17 +19,39 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     User.hasMany(models.Survey);
+    User.belongsToMany(models.Role, {
+      through: 'UserRoles',
+      onDelete: 'CASCADE',
+    });
   };
 
-  // I don't think this works how we are expecting it to.
-  // See https://sequelizedocs.fullstackacademy.com/instance-and-class-methods/
-  User.toJSON = function () {
+  User.prototype.toJSON = function () {
     // hide protected fields
     let attributes = Object.assign({}, this.get());
     for (let a of PROTECTED_ATTRIBUTES) {
       delete attributes[a];
     }
+
     return attributes;
+  };
+
+  User.prototype.hasRole = async function (role = null) {
+    let hasRole = false;
+
+    let userRoles = await this.getRoles();
+
+    if (userRoles !== null && Array.isArray(userRoles)) {
+      userRoles.map((currentRole) => {
+        if (currentRole.slug === role) hasRole = true;
+      });
+    }
+
+    return hasRole;
+  };
+
+  User.prototype.isAdmin = function () {
+    let isAdmin = this.hasRole('admin') || false;
+    return isAdmin;
   };
 
   return User;
