@@ -1,6 +1,10 @@
 'use strict';
 const { Model } = require('sequelize');
-const PROTECTED_ATTRIBUTES = ['password', 'createdAt', 'updatedAt'];
+const PROTECTED_ATTRIBUTES = [
+  'password',
+  'passwordResetToken',
+  'passwordResetExpiry',
+];
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {}
@@ -36,22 +40,22 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.hasRole = async function (role = null) {
-    let hasRole = false;
-
     let userRoles = await this.getRoles();
 
-    if (userRoles !== null && Array.isArray(userRoles)) {
-      userRoles.map((currentRole) => {
-        if (currentRole.slug === role) hasRole = true;
-      });
-    }
-
-    return hasRole;
+    return (
+      userRoles !== null &&
+      Array.isArray(userRoles) &&
+      role !== null &&
+      userRoles.some(
+        (r) =>
+          r.slug === role ||
+          (typeof role === 'object' && 'slug' in role && r.slug == role.slug),
+      )
+    );
   };
 
   User.prototype.isAdmin = function () {
-    let isAdmin = this.hasRole('admin') || false;
-    return isAdmin;
+    return this.hasRole('admin');
   };
 
   return User;

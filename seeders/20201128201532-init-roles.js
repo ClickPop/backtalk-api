@@ -35,7 +35,7 @@ module.exports = {
         });
 
         if (loadedUser !== null) {
-          let isAdmin = await loadedUser.hasRole('admin');
+          let isAdmin = await loadedUser.hasRole(roleAdmin);
           if (!isAdmin) {
             await loadedUser.addRole(roleAdmin);
             await loadedUser.removeRole(roleUser);
