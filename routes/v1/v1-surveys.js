@@ -211,6 +211,7 @@ router.patch('/update', authenticate, async (req, res, next) => {
         Questions: req.body.questions,
         respondent: req.body.respondent,
         isPublic: req.body.isPublic,
+        friendlyNames: req.body.friendlyNames,
       },
       {
         where: {
