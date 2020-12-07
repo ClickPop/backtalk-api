@@ -1,6 +1,6 @@
 {
   "name": "backtalk-api",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "API Service for backtalk.io",
   "main": "./server/server.js",
   "scripts": {
