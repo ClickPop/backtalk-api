@@ -1,6 +1,10 @@
 'use strict';
 const { Model } = require('sequelize');
-const PROTECTED_ATTRIBUTES = ['password', 'createdAt', 'updatedAt'];
+const PROTECTED_ATTRIBUTES = [
+  'password',
+  'passwordResetToken',
+  'passwordResetExpiry',
+];
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {}
@@ -19,17 +23,39 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     User.hasMany(models.Survey);
+    User.belongsToMany(models.Role, {
+      through: 'UserRoles',
+      onDelete: 'CASCADE',
+    });
   };
 
-  // I don't think this works how we are expecting it to.
-  // See https://sequelizedocs.fullstackacademy.com/instance-and-class-methods/
-  User.toJSON = function () {
+  User.prototype.toJSON = function () {
     // hide protected fields
     let attributes = Object.assign({}, this.get());
     for (let a of PROTECTED_ATTRIBUTES) {
       delete attributes[a];
     }
+
     return attributes;
+  };
+
+  User.prototype.hasRole = async function (role = null) {
+    let userRoles = await this.getRoles();
+
+    return (
+      userRoles !== null &&
+      Array.isArray(userRoles) &&
+      role !== null &&
+      userRoles.some(
+        (r) =>
+          r.slug === role ||
+          (typeof role === 'object' && 'slug' in role && r.slug == role.slug),
+      )
+    );
+  };
+
+  User.prototype.isAdmin = function () {
+    return this.hasRole('admin');
   };
 
   return User;

@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       respondent: DataTypes.BOOLEAN,
+      isPublic: DataTypes.BOOLEAN,
+      friendlyNames: DataTypes.JSONB,
     },
     {
       sequelize,
