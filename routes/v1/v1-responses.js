@@ -1,7 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const authenticate = require('../../middleware/authenticate');
-const { Response, Survey, Question } = require('../../models');
+const { Survey } = require('../../models/survey');
+const { Question } = require('../../models/question');
+const { Response } = require('../../models/response');
 const router = express.Router();
 const hashIds = require('../../helpers/hashIds');
 

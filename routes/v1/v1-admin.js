@@ -3,7 +3,11 @@ const { Op } = require('sequelize');
 const hashIds = require('../../helpers/hashIds');
 const authenticate = require('../../middleware/authenticate');
 const isAdmin = require('../../middleware/isAdmin');
-const { User, Survey, Question, Response, Role } = require('../../models');
+const { User } = require('../../models/user');
+const { Survey } = require('../../models/survey');
+const { Question } = require('../../models/question');
+const { Response } = require('../../models/response');
+const { Role } = require('../../models/role');
 const router = express.Router();
 
 if (process.env.NODE_ENV !== 'production') {

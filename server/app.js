@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const restrictAccess = require('../middleware/restrictAccess');
 const cors = require('cors');
 const { rootResponse } = require('../helpers/apiDetails');
+const sync = require('../db/sync');
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
@@ -45,5 +46,7 @@ app.use((err, _req, res) => {
   console.error(err.stack);
   return res.status(err.status).json({ errors: err.errors });
 });
+
+sync();
 
 module.exports = app;
