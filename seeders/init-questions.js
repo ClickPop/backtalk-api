@@ -1,6 +1,8 @@
 'use strict';
-const path = require('path');
-const { Survey, Question } = require(path.resolve('models'));
+const { Survey } = require('../models/survey');
+const { Question } = require('../models/question');
+const { sequelize } = require('../db/sequelize');
+const queryInterface = sequelize.getQueryInterface();
 
 module.exports = {
   up: async () => {
@@ -24,7 +26,7 @@ module.exports = {
     return true;
   },
 
-  down: async (queryInterface) => {
+  down: async () => {
     await queryInterface.bulkDelete('SurveyQuestions', null, {
       truncate: true,
       cascade: true,

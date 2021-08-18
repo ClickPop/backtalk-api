@@ -1,6 +1,9 @@
 'use strict';
 
-const { User, Role } = require('../models');
+const { User } = require('../models/user');
+const { Role } = require('../models/role');
+const { sequelize } = require('../db/sequelize');
+const queryInterface = sequelize.getQueryInterface();
 
 const admins = [
   'sean.metzgar@gmail.com',
@@ -48,7 +51,7 @@ module.exports = {
     }
   },
 
-  down: async (queryInterface) => {
+  down: async () => {
     await queryInterface.bulkDelete('UserRoles', null, {
       truncate: true,
       cascade: true,
