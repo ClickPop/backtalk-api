@@ -1,0 +1,28 @@
+{
+  "functions": {
+    "runtime": "nodejs14",
+    "source": "./"
+  },
+  "hosting": {
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "expressApi"
+      }
+    ]
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    },
+    "hosting": {
+      "port": 5000
+    }
+  }
+}
