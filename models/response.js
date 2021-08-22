@@ -177,4 +177,4 @@ Response.prototype.public = function () {
   return attributes;
 };
 
-module.exports = Response;
+module.exports = { Response };

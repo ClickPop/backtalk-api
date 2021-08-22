@@ -21,4 +21,4 @@ Role.associate = function (models) {
   });
 };
 
-module.exports = Role;
+module.exports = { Role };

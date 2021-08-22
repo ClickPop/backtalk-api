@@ -58,4 +58,4 @@ User.prototype.isAdmin = function () {
   return this.hasRole('admin');
 };
 
-module.exports = User;
+module.exports = { User };

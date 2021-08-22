@@ -23,4 +23,4 @@ Question.associate = function (models) {
     onDelete: 'CASCADE',
   });
 };
-module.exports = Question;
+module.exports = { Question };

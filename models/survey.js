@@ -24,4 +24,4 @@ Survey.associate = function (models) {
   Survey.hasMany(models.Response);
 };
 
-module.exports = Survey;
+module.exports = { Survey };
