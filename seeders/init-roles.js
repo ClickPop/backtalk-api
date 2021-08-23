@@ -1,6 +1,9 @@
 'use strict';
 
-const { User, Role } = require('../models');
+const { User } = require('../models/user');
+const { Role } = require('../models/role');
+const { sequelize } = require('../db/sequelize');
+const queryInterface = sequelize.getQueryInterface();
 
 const admins = [
   'sean.metzgar@gmail.com',
@@ -10,36 +13,7 @@ const admins = [
 ];
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('UserRoles', {
-      UserId: {
-        type: Sequelize.BIGINT,
-        defaultValue: null,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-      },
-      RoleId: {
-        type: Sequelize.BIGINT,
-        defaultValue: null,
-        references: {
-          model: 'Roles',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
-
+  up: async () => {
     let roleUser = await Role.findOne({ where: { slug: 'user' } });
     let roleAdmin = await Role.findOne({ where: { slug: 'admin' } });
 
@@ -76,7 +50,11 @@ module.exports = {
       }
     }
   },
-  down: async (queryInterface) => {
-    await queryInterface.dropTable('UserRoles');
+
+  down: async () => {
+    await queryInterface.bulkDelete('UserRoles', null, {
+      truncate: true,
+      cascade: true,
+    });
   },
 };

@@ -1,6 +1,10 @@
 'use strict';
 const { loremIpsum } = require('lorem-ipsum');
-const { Survey, User } = require('../models');
+const { User } = require('../models/user');
+const { Survey } = require('../models/survey');
+const { sequelize } = require('../db/sequelize');
+const queryInterface = sequelize.getQueryInterface();
+
 module.exports = {
   up: async () => {
     const surveys = [];
@@ -22,7 +26,7 @@ module.exports = {
     return true;
   },
 
-  down: async (queryInterface) => {
+  down: async () => {
     return await queryInterface.bulkDelete('Surveys', null, {
       truncate: true,
       cascade: true,
