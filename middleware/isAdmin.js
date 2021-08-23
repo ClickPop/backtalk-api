@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require('../models/user');
 
 module.exports = async (req, _, next) => {
   if (!req.user && !req.user.id)

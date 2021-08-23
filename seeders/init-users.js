@@ -1,8 +1,9 @@
 'use strict';
 const { hash } = require('bcryptjs');
-
+const { sequelize } = require('../db/sequelize');
+const queryInterface = sequelize.getQueryInterface();
 module.exports = {
-  up: async (queryInterface) => {
+  up: async () => {
     return await queryInterface.bulkInsert('Users', [
       {
         email: 'graham@clickpopmedia.com',
@@ -28,7 +29,7 @@ module.exports = {
     ]);
   },
 
-  down: async (queryInterface) => {
+  down: async () => {
     return await queryInterface.bulkDelete('Users', null, {
       truncate: true,
       cascade: true,

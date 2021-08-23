@@ -1,5 +1,5 @@
 const express = require('express');
-const { User } = require('../../models');
+const { User } = require('../../models/user');
 const { compare, hash } = require('bcryptjs');
 const crypto = require('crypto');
 const {

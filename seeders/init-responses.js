@@ -1,7 +1,11 @@
 'use strict';
 
 const faker = require('faker');
-const { Survey, Question, Response } = require('../models');
+const { Survey } = require('../models/survey');
+const { Question } = require('../models/question');
+const { Response } = require('../models/response');
+const { sequelize } = require('../db/sequelize');
+const queryInterface = sequelize.getQueryInterface();
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -70,7 +74,7 @@ module.exports = {
     return true;
   },
 
-  down: async (queryInterface) => {
+  down: async () => {
     try {
       await queryInterface.bulkDelete('Responses', null, {
         truncate: true,

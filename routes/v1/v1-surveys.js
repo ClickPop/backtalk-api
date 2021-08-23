@@ -7,7 +7,10 @@ const {
   checkTitle,
   checkSurveyQuestions,
 } = require('../../middleware/validate');
-const { Survey, Question, User, Response } = require('../../models');
+const { User } = require('../../models/user');
+const { Survey } = require('../../models/survey');
+const { Question } = require('../../models/question');
+const { Response } = require('../../models/response');
 const hashIds = require('../../helpers/hashIds');
 
 router.get('/getHash', async (req, res) => {
